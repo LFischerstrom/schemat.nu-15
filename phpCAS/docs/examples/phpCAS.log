@@ -1,0 +1,472 @@
+9DEE .START (2015-06-17 13:13:04) phpCAS-1.3.3+ ****************** [CAS.php:448]
+9DEE .=> phpCAS::client('2.0', 'cas.example.com', 443, '/cas') [example_simple.php:26]
+9DEE .|    => CAS_Client::__construct('2.0', false, 'cas.example.com', 443, '/cas', true) [CAS.php:341]
+9DEE .|    |    Starting a new session el2qvbjmhj7uc92o17fs1lukj7 [Client.php:906]
+9DEE .|    <= ''
+9DEE .<= ''
+9DEE .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+9DEE .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+9DEE .<= ''
+9DEE .=> phpCAS::forceAuthentication() [example_simple.php:38]
+9DEE .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+9DEE .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+9DEE .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+9DEE .|    |    |    |    no user found [Client.php:1601]
+9DEE .|    |    |    <= false
+9DEE .|    |    |    no ticket found [Client.php:1460]
+9DEE .|    |    <= false
+9DEE .|    |    => CAS_Client::redirectToCas(false) [Client.php:1257]
+9DEE .|    |    |    => CAS_Client::getServerLoginURL(false, false) [Client.php:1622]
+9DEE .|    |    |    |    => CAS_Client::getURL() [Client.php:342]
+9DEE .|    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+9DEE .|    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+9DEE .|    |    |    <= 'https://cas.example.com/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+9DEE .|    |    |    Redirect to : https://cas.example.com/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php [Client.php:1629]
+9DEE .|    |    |    exit()
+9DEE .|    |    |    -
+9DEE .|    |    -
+9DEE .|    -
+12B1 .START (2015-06-17 13:14:18) phpCAS-1.3.3+ ****************** [CAS.php:448]
+12B1 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+12B1 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+12B1 .|    |    Starting a new session el2qvbjmhj7uc92o17fs1lukj7 [Client.php:906]
+12B1 .|    <= ''
+12B1 .<= ''
+12B1 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+12B1 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+12B1 .<= ''
+12B1 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+12B1 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+12B1 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+12B1 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+12B1 .|    |    |    |    no user found [Client.php:1601]
+12B1 .|    |    |    <= false
+12B1 .|    |    |    no ticket found [Client.php:1460]
+12B1 .|    |    <= false
+12B1 .|    |    => CAS_Client::redirectToCas(false) [Client.php:1257]
+12B1 .|    |    |    => CAS_Client::getServerLoginURL(false, false) [Client.php:1622]
+12B1 .|    |    |    |    => CAS_Client::getURL() [Client.php:342]
+12B1 .|    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+12B1 .|    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+12B1 .|    |    |    <= 'https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+12B1 .|    |    |    Redirect to : https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php [Client.php:1629]
+12B1 .|    |    |    exit()
+12B1 .|    |    |    -
+12B1 .|    |    -
+12B1 .|    -
+1AB6 .START (2015-06-17 13:14:18) phpCAS-1.3.3+ ****************** [CAS.php:448]
+1AB6 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+1AB6 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+1AB6 .|    |    Starting a new session el2qvbjmhj7uc92o17fs1lukj7 [Client.php:906]
+1AB6 .|    |    Ticket 'ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1.unit.liu.se' found [Client.php:988]
+1AB6 .|    <= ''
+1AB6 .<= ''
+1AB6 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+1AB6 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+1AB6 .<= ''
+1AB6 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+1AB6 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+1AB6 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+1AB6 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+1AB6 .|    |    |    |    no user found [Client.php:1601]
+1AB6 .|    |    |    <= false
+1AB6 .|    |    |    CAS 2.0 ticket `ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1.unit.liu.se' is present [Client.php:1413]
+1AB6 .|    |    |    => CAS_Client::validateCAS20('', NULL, NULL, false) [Client.php:1416]
+1AB6 .|    |    |    |     [Client.php:3121]
+1AB6 .|    |    |    |    => CAS_Client::getServerServiceValidateURL() [Client.php:3128]
+1AB6 .|    |    |    |    |    => CAS_Client::getURL() [Client.php:453]
+1AB6 .|    |    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+1AB6 .|    |    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+1AB6 .|    |    |    |    <= 'https://login.liu.se/cas/serviceValidate?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+1AB6 .|    |    |    |    => CAS_Client::_readURL('https://login.liu.se/cas/serviceValidate?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php&ticket=ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1.unit.liu.se', NULL, NULL, NULL) [Client.php:3143]
+1AB6 .|    |    |    |    |    => CAS_Request_CurlRequest::sendRequest() [AbstractRequest.php:242]
+1AB6 .|    |    |    |    |    |    Response Body: 
+1AB6 .|    |    |    |    |    |    
+1AB6 .|    |    |    |    |    |    
+1AB6 .|    |    |    |    |    |    
+1AB6 .|    |    |    |    |    |    
+1AB6 .|    |    |    |    |    |    <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+1AB6 .|    |    |    |    |    |    	<cas:authenticationSuccess>
+1AB6 .|    |    |    |    |    |    		<cas:user>henha972</cas:user>
+1AB6 .|    |    |    |    |    |    
+1AB6 .|    |    |    |    |    |    
+1AB6 .|    |    |    |    |    |    	</cas:authenticationSuccess>
+1AB6 .|    |    |    |    |    |    </cas:serviceResponse>
+1AB6 .|    |    |    |    |    |     [CurlRequest.php:84]
+1AB6 .|    |    |    |    |    <= true
+1AB6 .|    |    |    |    <= true
+1AB6 .|    |    |    |    => CAS_Client::_readExtraAttributesCas20(DOMNodeList) [Client.php:3201]
+1AB6 .|    |    |    |    |    Testing for rubycas style attributes [Client.php:3319]
+1AB6 .|    |    |    |    <= ''
+1AB6 .|    |    |    |    Storing Proxy List [Client.php:3210]
+1AB6 .|    |    |    |    => CAS_ProxyChain_AllowedList::isProxyListAllowed(array ()) [Client.php:3213]
+1AB6 .|    |    |    |    |    No proxies were found in the response [AllowedList.php:81]
+1AB6 .|    |    |    |    <= true
+1AB6 .|    |    |    |    => CAS_Client::_renameSession('ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1.unit.liu.se') [Client.php:3245]
+1AB6 .|    |    |    |    |    Killing session: el2qvbjmhj7uc92o17fs1lukj7 [Client.php:3607]
+1AB6 .|    |    |    |    |    Starting session: ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:3611]
+1AB6 .|    |    |    |    |    Restoring old session vars [Client.php:3614]
+1AB6 .|    |    |    |    <= ''
+1AB6 .|    |    |    <= true
+1AB6 .|    |    |    CAS 2.0 ticket `ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1.unit.liu.se' was validated [Client.php:1419]
+1AB6 .|    |    |    => CAS_Client::getURL() [Client.php:1484]
+1AB6 .|    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+1AB6 .|    |    |    Prepare redirect to : http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:1484]
+1AB6 .|    |    |    => CAS_Client::getURL() [Client.php:1486]
+1AB6 .|    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+1AB6 .|    |    |    exit()
+1AB6 .|    |    |    -
+1AB6 .|    |    -
+1AB6 .|    -
+95E2 .START (2015-06-17 13:14:18) phpCAS-1.3.3+ ****************** [CAS.php:448]
+95E2 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+95E2 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+95E2 .|    |    Starting a new session ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:906]
+95E2 .|    <= ''
+95E2 .<= ''
+95E2 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+95E2 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+95E2 .<= ''
+95E2 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+95E2 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+95E2 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+95E2 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+95E2 .|    |    |    |    user = `henha972' [Client.php:1588]
+95E2 .|    |    |    <= true
+95E2 .|    |    |    user was already authenticated, no need to look for tickets [Client.php:1383]
+95E2 .|    |    <= true
+95E2 .|    |    no need to authenticate [Client.php:1250]
+95E2 .|    <= true
+95E2 .<= ''
+7172 .START (2015-06-17 13:14:25) phpCAS-1.3.3+ ****************** [CAS.php:448]
+7172 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+7172 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+7172 .|    |    Starting a new session ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:906]
+7172 .|    <= ''
+7172 .<= ''
+7172 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+7172 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+7172 .<= ''
+7172 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+7172 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+7172 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+7172 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+7172 .|    |    |    |    user = `henha972' [Client.php:1588]
+7172 .|    |    |    <= true
+7172 .|    |    |    user was already authenticated, no need to look for tickets [Client.php:1383]
+7172 .|    |    <= true
+7172 .|    |    no need to authenticate [Client.php:1250]
+7172 .|    <= true
+7172 .<= ''
+7172 .=> phpCAS::logout() [example_simple.php:45]
+7172 .|    => CAS_Client::logout(array ()) [CAS.php:1369]
+7172 .|    |    Prepare redirect to : https://login.liu.se/cas/logout [Client.php:1662]
+7172 .|    |    exit()
+7172 .|    |    -
+7172 .|    -
+F435 .START (2015-06-17 13:14:28) phpCAS-1.3.3+ ****************** [CAS.php:448]
+F435 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+F435 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+F435 .|    |    Starting a new session ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:906]
+F435 .|    <= ''
+F435 .<= ''
+F435 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+F435 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+F435 .<= ''
+F435 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+F435 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+F435 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+F435 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+F435 .|    |    |    |    no user found [Client.php:1601]
+F435 .|    |    |    <= false
+F435 .|    |    |    no ticket found [Client.php:1460]
+F435 .|    |    <= false
+F435 .|    |    => CAS_Client::redirectToCas(false) [Client.php:1257]
+F435 .|    |    |    => CAS_Client::getServerLoginURL(false, false) [Client.php:1622]
+F435 .|    |    |    |    => CAS_Client::getURL() [Client.php:342]
+F435 .|    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+F435 .|    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+F435 .|    |    |    <= 'https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+F435 .|    |    |    Redirect to : https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php [Client.php:1629]
+F435 .|    |    |    exit()
+F435 .|    |    |    -
+F435 .|    |    -
+F435 .|    -
+89DF .START (2015-06-17 13:14:33) phpCAS-1.3.3+ ****************** [CAS.php:448]
+89DF .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+89DF .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+89DF .|    |    Starting a new session ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:906]
+89DF .|    <= ''
+89DF .<= ''
+89DF .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+89DF .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+89DF .<= ''
+89DF .=> phpCAS::forceAuthentication() [example_simple.php:38]
+89DF .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+89DF .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+89DF .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+89DF .|    |    |    |    no user found [Client.php:1601]
+89DF .|    |    |    <= false
+89DF .|    |    |    no ticket found [Client.php:1460]
+89DF .|    |    <= false
+89DF .|    |    => CAS_Client::redirectToCas(false) [Client.php:1257]
+89DF .|    |    |    => CAS_Client::getServerLoginURL(false, false) [Client.php:1622]
+89DF .|    |    |    |    => CAS_Client::getURL() [Client.php:342]
+89DF .|    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+89DF .|    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+89DF .|    |    |    <= 'https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+89DF .|    |    |    Redirect to : https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php [Client.php:1629]
+89DF .|    |    |    exit()
+89DF .|    |    |    -
+89DF .|    |    -
+89DF .|    -
+ABED .START (2015-06-17 13:15:27) phpCAS-1.3.3+ ****************** [CAS.php:448]
+ABED .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+ABED .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+ABED .|    |    Starting a new session ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:906]
+ABED .|    <= ''
+ABED .<= ''
+ABED .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+ABED .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+ABED .<= ''
+ABED .=> phpCAS::forceAuthentication() [example_simple.php:38]
+ABED .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+ABED .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+ABED .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+ABED .|    |    |    |    no user found [Client.php:1601]
+ABED .|    |    |    <= false
+ABED .|    |    |    no ticket found [Client.php:1460]
+ABED .|    |    <= false
+ABED .|    |    => CAS_Client::redirectToCas(false) [Client.php:1257]
+ABED .|    |    |    => CAS_Client::getServerLoginURL(false, false) [Client.php:1622]
+ABED .|    |    |    |    => CAS_Client::getURL() [Client.php:342]
+ABED .|    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+ABED .|    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+ABED .|    |    |    <= 'https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+ABED .|    |    |    Redirect to : https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php [Client.php:1629]
+ABED .|    |    |    exit()
+ABED .|    |    |    -
+ABED .|    |    -
+ABED .|    -
+518C .START (2015-06-17 13:16:14) phpCAS-1.3.3+ ****************** [CAS.php:448]
+518C .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+518C .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+518C .|    |    Starting a new session ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:906]
+518C .|    |    Ticket 'ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1.unit.liu.se' found [Client.php:988]
+518C .|    <= ''
+518C .<= ''
+518C .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+518C .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+518C .<= ''
+518C .=> phpCAS::forceAuthentication() [example_simple.php:38]
+518C .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+518C .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+518C .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+518C .|    |    |    |    no user found [Client.php:1601]
+518C .|    |    |    <= false
+518C .|    |    |    CAS 2.0 ticket `ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1.unit.liu.se' is present [Client.php:1413]
+518C .|    |    |    => CAS_Client::validateCAS20('', NULL, NULL, false) [Client.php:1416]
+518C .|    |    |    |     [Client.php:3121]
+518C .|    |    |    |    => CAS_Client::getServerServiceValidateURL() [Client.php:3128]
+518C .|    |    |    |    |    => CAS_Client::getURL() [Client.php:453]
+518C .|    |    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+518C .|    |    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+518C .|    |    |    |    <= 'https://login.liu.se/cas/serviceValidate?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+518C .|    |    |    |    => CAS_Client::_readURL('https://login.liu.se/cas/serviceValidate?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php&ticket=ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1.unit.liu.se', NULL, NULL, NULL) [Client.php:3143]
+518C .|    |    |    |    |    => CAS_Request_CurlRequest::sendRequest() [AbstractRequest.php:242]
+518C .|    |    |    |    |    |    Response Body: 
+518C .|    |    |    |    |    |    
+518C .|    |    |    |    |    |    
+518C .|    |    |    |    |    |    
+518C .|    |    |    |    |    |    
+518C .|    |    |    |    |    |    <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+518C .|    |    |    |    |    |    	<cas:authenticationSuccess>
+518C .|    |    |    |    |    |    		<cas:user>henha972</cas:user>
+518C .|    |    |    |    |    |    
+518C .|    |    |    |    |    |    
+518C .|    |    |    |    |    |    	</cas:authenticationSuccess>
+518C .|    |    |    |    |    |    </cas:serviceResponse>
+518C .|    |    |    |    |    |     [CurlRequest.php:84]
+518C .|    |    |    |    |    <= true
+518C .|    |    |    |    <= true
+518C .|    |    |    |    => CAS_Client::_readExtraAttributesCas20(DOMNodeList) [Client.php:3201]
+518C .|    |    |    |    |    Testing for rubycas style attributes [Client.php:3319]
+518C .|    |    |    |    <= ''
+518C .|    |    |    |    Storing Proxy List [Client.php:3210]
+518C .|    |    |    |    => CAS_ProxyChain_AllowedList::isProxyListAllowed(array ()) [Client.php:3213]
+518C .|    |    |    |    |    No proxies were found in the response [AllowedList.php:81]
+518C .|    |    |    |    <= true
+518C .|    |    |    |    => CAS_Client::_renameSession('ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1.unit.liu.se') [Client.php:3245]
+518C .|    |    |    |    |    Killing session: ST-47053-bXlVsjfe6cN2Ma2TiCHe-idp1unitliuse [Client.php:3607]
+518C .|    |    |    |    |    Starting session: ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1unitliuse [Client.php:3611]
+518C .|    |    |    |    |    Restoring old session vars [Client.php:3614]
+518C .|    |    |    |    <= ''
+518C .|    |    |    <= true
+518C .|    |    |    CAS 2.0 ticket `ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1.unit.liu.se' was validated [Client.php:1419]
+518C .|    |    |    => CAS_Client::getURL() [Client.php:1484]
+518C .|    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+518C .|    |    |    Prepare redirect to : http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:1484]
+518C .|    |    |    => CAS_Client::getURL() [Client.php:1486]
+518C .|    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+518C .|    |    |    exit()
+518C .|    |    |    -
+518C .|    |    -
+518C .|    -
+D473 .START (2015-06-17 13:16:14) phpCAS-1.3.3+ ****************** [CAS.php:448]
+D473 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+D473 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+D473 .|    |    Starting a new session ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1unitliuse [Client.php:906]
+D473 .|    <= ''
+D473 .<= ''
+D473 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+D473 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+D473 .<= ''
+D473 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+D473 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+D473 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+D473 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+D473 .|    |    |    |    user = `henha972' [Client.php:1588]
+D473 .|    |    |    <= true
+D473 .|    |    |    user was already authenticated, no need to look for tickets [Client.php:1383]
+D473 .|    |    <= true
+D473 .|    |    no need to authenticate [Client.php:1250]
+D473 .|    <= true
+D473 .<= ''
+5C36 .START (2015-06-17 13:16:26) phpCAS-1.3.3+ ****************** [CAS.php:448]
+5C36 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+5C36 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+5C36 .|    |    Starting a new session ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1unitliuse [Client.php:906]
+5C36 .|    <= ''
+5C36 .<= ''
+5C36 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+5C36 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+5C36 .<= ''
+5C36 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+5C36 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+5C36 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+5C36 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+5C36 .|    |    |    |    user = `henha972' [Client.php:1588]
+5C36 .|    |    |    <= true
+5C36 .|    |    |    user was already authenticated, no need to look for tickets [Client.php:1383]
+5C36 .|    |    <= true
+5C36 .|    |    no need to authenticate [Client.php:1250]
+5C36 .|    <= true
+5C36 .<= ''
+5C36 .=> phpCAS::logout() [example_simple.php:45]
+5C36 .|    => CAS_Client::logout(array ()) [CAS.php:1369]
+5C36 .|    |    Prepare redirect to : https://login.liu.se/cas/logout [Client.php:1662]
+5C36 .|    |    exit()
+5C36 .|    |    -
+5C36 .|    -
+B248 .START (2015-06-17 13:16:28) phpCAS-1.3.3+ ****************** [CAS.php:448]
+B248 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+B248 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+B248 .|    |    Starting a new session ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1unitliuse [Client.php:906]
+B248 .|    <= ''
+B248 .<= ''
+B248 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+B248 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+B248 .<= ''
+B248 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+B248 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+B248 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+B248 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+B248 .|    |    |    |    no user found [Client.php:1601]
+B248 .|    |    |    <= false
+B248 .|    |    |    no ticket found [Client.php:1460]
+B248 .|    |    <= false
+B248 .|    |    => CAS_Client::redirectToCas(false) [Client.php:1257]
+B248 .|    |    |    => CAS_Client::getServerLoginURL(false, false) [Client.php:1622]
+B248 .|    |    |    |    => CAS_Client::getURL() [Client.php:342]
+B248 .|    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+B248 .|    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+B248 .|    |    |    <= 'https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+B248 .|    |    |    Redirect to : https://login.liu.se/cas/login?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php [Client.php:1629]
+B248 .|    |    |    exit()
+B248 .|    |    |    -
+B248 .|    |    -
+B248 .|    -
+7134 .START (2015-06-17 13:16:41) phpCAS-1.3.3+ ****************** [CAS.php:448]
+7134 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+7134 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+7134 .|    |    Starting a new session ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1unitliuse [Client.php:906]
+7134 .|    |    Ticket 'ST-47086-zXexaRdLYNfwQijcgFcQ-idp1.unit.liu.se' found [Client.php:988]
+7134 .|    <= ''
+7134 .<= ''
+7134 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+7134 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+7134 .<= ''
+7134 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+7134 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+7134 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+7134 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+7134 .|    |    |    |    no user found [Client.php:1601]
+7134 .|    |    |    <= false
+7134 .|    |    |    CAS 2.0 ticket `ST-47086-zXexaRdLYNfwQijcgFcQ-idp1.unit.liu.se' is present [Client.php:1413]
+7134 .|    |    |    => CAS_Client::validateCAS20('', NULL, NULL, false) [Client.php:1416]
+7134 .|    |    |    |     [Client.php:3121]
+7134 .|    |    |    |    => CAS_Client::getServerServiceValidateURL() [Client.php:3128]
+7134 .|    |    |    |    |    => CAS_Client::getURL() [Client.php:453]
+7134 .|    |    |    |    |    |    Final URI: http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:3491]
+7134 .|    |    |    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+7134 .|    |    |    |    <= 'https://login.liu.se/cas/serviceValidate?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php'
+7134 .|    |    |    |    => CAS_Client::_readURL('https://login.liu.se/cas/serviceValidate?service=http%3A%2F%2Flocalhost%2FphpCAS%2Fdocs%2Fexamples%2Fexample_simple.php&ticket=ST-47086-zXexaRdLYNfwQijcgFcQ-idp1.unit.liu.se', NULL, NULL, NULL) [Client.php:3143]
+7134 .|    |    |    |    |    => CAS_Request_CurlRequest::sendRequest() [AbstractRequest.php:242]
+7134 .|    |    |    |    |    |    Response Body: 
+7134 .|    |    |    |    |    |    
+7134 .|    |    |    |    |    |    
+7134 .|    |    |    |    |    |    
+7134 .|    |    |    |    |    |    
+7134 .|    |    |    |    |    |    <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+7134 .|    |    |    |    |    |    	<cas:authenticationSuccess>
+7134 .|    |    |    |    |    |    		<cas:user>henha972</cas:user>
+7134 .|    |    |    |    |    |    
+7134 .|    |    |    |    |    |    
+7134 .|    |    |    |    |    |    	</cas:authenticationSuccess>
+7134 .|    |    |    |    |    |    </cas:serviceResponse>
+7134 .|    |    |    |    |    |     [CurlRequest.php:84]
+7134 .|    |    |    |    |    <= true
+7134 .|    |    |    |    <= true
+7134 .|    |    |    |    => CAS_Client::_readExtraAttributesCas20(DOMNodeList) [Client.php:3201]
+7134 .|    |    |    |    |    Testing for rubycas style attributes [Client.php:3319]
+7134 .|    |    |    |    <= ''
+7134 .|    |    |    |    Storing Proxy List [Client.php:3210]
+7134 .|    |    |    |    => CAS_ProxyChain_AllowedList::isProxyListAllowed(array ()) [Client.php:3213]
+7134 .|    |    |    |    |    No proxies were found in the response [AllowedList.php:81]
+7134 .|    |    |    |    <= true
+7134 .|    |    |    |    => CAS_Client::_renameSession('ST-47086-zXexaRdLYNfwQijcgFcQ-idp1.unit.liu.se') [Client.php:3245]
+7134 .|    |    |    |    |    Killing session: ST-47084-NuSucKLzlMlyDgaPOd1Y-idp1unitliuse [Client.php:3607]
+7134 .|    |    |    |    |    Starting session: ST-47086-zXexaRdLYNfwQijcgFcQ-idp1unitliuse [Client.php:3611]
+7134 .|    |    |    |    |    Restoring old session vars [Client.php:3614]
+7134 .|    |    |    |    <= ''
+7134 .|    |    |    <= true
+7134 .|    |    |    CAS 2.0 ticket `ST-47086-zXexaRdLYNfwQijcgFcQ-idp1.unit.liu.se' was validated [Client.php:1419]
+7134 .|    |    |    => CAS_Client::getURL() [Client.php:1484]
+7134 .|    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+7134 .|    |    |    Prepare redirect to : http://localhost/phpCAS/docs/examples/example_simple.php [Client.php:1484]
+7134 .|    |    |    => CAS_Client::getURL() [Client.php:1486]
+7134 .|    |    |    <= 'http://localhost/phpCAS/docs/examples/example_simple.php'
+7134 .|    |    |    exit()
+7134 .|    |    |    -
+7134 .|    |    -
+7134 .|    -
+C1A3 .START (2015-06-17 13:16:41) phpCAS-1.3.3+ ****************** [CAS.php:448]
+C1A3 .=> phpCAS::client('2.0', 'login.liu.se', 443, '/cas') [example_simple.php:26]
+C1A3 .|    => CAS_Client::__construct('2.0', false, 'login.liu.se', 443, '/cas', true) [CAS.php:341]
+C1A3 .|    |    Starting a new session ST-47086-zXexaRdLYNfwQijcgFcQ-idp1unitliuse [Client.php:906]
+C1A3 .|    <= ''
+C1A3 .<= ''
+C1A3 .=> phpCAS::setNoCasServerValidation() [example_simple.php:35]
+C1A3 .|    You have configured no validation of the legitimacy of the cas server. This is not recommended for production use. [CAS.php:1563]
+C1A3 .<= ''
+C1A3 .=> phpCAS::forceAuthentication() [example_simple.php:38]
+C1A3 .|    => CAS_Client::forceAuthentication() [CAS.php:1025]
+C1A3 .|    |    => CAS_Client::isAuthenticated() [Client.php:1248]
+C1A3 .|    |    |    => CAS_Client::_wasPreviouslyAuthenticated() [Client.php:1359]
+C1A3 .|    |    |    |    user = `henha972' [Client.php:1588]
+C1A3 .|    |    |    <= true
+C1A3 .|    |    |    user was already authenticated, no need to look for tickets [Client.php:1383]
+C1A3 .|    |    <= true
+C1A3 .|    |    no need to authenticate [Client.php:1250]
+C1A3 .|    <= true
+C1A3 .<= ''

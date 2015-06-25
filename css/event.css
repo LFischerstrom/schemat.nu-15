@@ -1,0 +1,12 @@
+
+.event{
+    width: 100%;
+    background-color:#BFDA00;
+    position: absolute;
+    overflow: hidden;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+}

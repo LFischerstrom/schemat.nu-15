@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+    <script src='../javascript/jquery.overlaps.js'></script>
+
+    <style>
+        div {
+            position: absolute;
+            top:50px;
+            height: 50px;
+            width:100%;
+            background-color: #00aa00;
+            border: 1px solid #000000;
+            display: inline-block;
+        }
+        .overlap{
+            position: absolute;
+            width: 50%;
+            float:left;
+            overflow: hidden;
+        }
+
+        .doubleOverlap{
+            width: 30%;
+        }
+
+        .right{
+            left:50%
+        }
+
+        .next {
+            top:200px;
+        }
+
+        .long{
+            height: 230px;
+            top:30px;
+        }
+
+
+    </style>
+</head>
+<body>
+<p></p>
+
+<div class="event long"></div>
+<div class="event"></div>
+<div class="event"></div>
+
+<div class="event next"></div>
+<div class="event next"></div>
+
+<script>
+    var allOverlappingDivs = $('.event').overlaps();
+    $.each(allOverlappingDivs, function(index, currentDiv) {
+        if (!$(currentDiv).hasClass("overlapFixed")){
+            $(currentDiv).addClass("currentDiv");
+            var allDivsThatOverlapsCurrentDiv = $("div").overlaps(".currentDiv");
+            var allDivsThatOverlapsCurrentDivIncludingCurrentDiv = allDivsThatOverlapsCurrentDiv.add(currentDiv);
+            var numberOfDivs = allDivsThatOverlapsCurrentDivIncludingCurrentDiv.size();
+            $.each(allDivsThatOverlapsCurrentDivIncludingCurrentDiv, function(index, currentOverlappingDiv) {
+                var width = 100 / numberOfDivs;
+                $(currentOverlappingDiv).text(index);
+                $(currentOverlappingDiv).css("width", width + "%");
+                $(currentOverlappingDiv).css("left", ((index+1)/numberOfDivs - 1/numberOfDivs)*100 + "%");
+                $(currentOverlappingDiv).addClass("overlapFixed");
+            });
+            $(currentDiv).removeClass("currentDiv");
+        }
+    });
+</script>
+
+</body>
+</html>

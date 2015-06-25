@@ -1,0 +1,93 @@
+body, html{
+    height: 100%;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family: 'Capriola', sans-serif;
+}
+
+.table {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:50px;
+}
+
+.row {
+    display: table-row;
+}
+
+.cell {
+    display: table-cell;
+    border: 1px solid lightgray;
+    border-width: 0 1px;
+    position: relative;
+    text-align: center;
+}
+
+header {
+    height: 50px;
+    background-color: darkslateblue;
+    z-index: 70;
+    position: fixed;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+header #row{
+    display: table-row;
+}
+
+header div {
+    display: table-cell;
+    padding: 0 10px;
+    vertical-align: bottom;
+}
+
+header div #middle{
+    width:70%;
+    text-align:center;
+}
+
+header div h1, header div button{
+    margin: 5px;
+}
+
+header div img{
+    width: 30px;
+    height: 30px;
+    margin-top: 10px;
+}
+
+header #right{
+    float:right;
+    text-align: right;
+}
+
+h1 {
+    margin: 0;
+    padding: 0;
+    color:white;
+}
+
+.weekdayHeader{
+    width: 100%;
+    height: 20px;
+    margin-top: 0px;
+    border-bottom: 2px solid lightgray;
+}
+
+.weekdayContent{
+    height: calc(100% - 20px);
+    position: relative;
+}
+
+.fp-controlArrow{
+    display: none;
+}
+

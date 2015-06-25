@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>overlaps Test Suite</title>
+	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+	<style type="text/css" media="screen">
+		.testDiv { position: absolute; background: #000; opacity: .5; width: 100px; height: 100px; }
+		#one   { top: 50px; left: 50px; }
+		#two   { top: 105px; left: 25px; }
+		#three { top: 500px; left: 500px; }
+		#four  { top: 0; left: 0; }
+
+		#adjacent1 { top: 600px; left: 0; }
+		#adjacent2 { top: 600px; left: 100px; }
+		#adjacent3 { top: 700px; left: 0; }
+		#adjacent4 { top: 700px; left: 100px; }
+	</style>
+	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script>
+		(function(){
+			var verMatch = /v=([\w\.]+)/.exec( location.search ),
+			version = verMatch && verMatch[1], src;
+			if ( version ) {
+				src = 'code.jquery.com/jquery-' + version;
+			}
+			document.write( '<script src="http://' + src + '.js"><\/script>' );
+			window.version = version;
+		})();
+	</script>
+	<script>
+		$(function() {
+			$('#version').html(window.version)
+		});
+	</script>
+	<script src="../../javascript/jquery.overlaps.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="test.js"></script>
+</head>
+<body>
+	<h1 id="qunit-header">overlaps Test Suite w/jQuery <span id="version"></span></h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="main" style="visibility: hidden;">
+		<div id="one" class="testDiv"></div>
+		<div id="two" class="testDiv"></div>
+		<div id="three" class="testDiv"></div>
+		<div id="four" class="testDiv"></div>
+
+		<div id="adjacent1" class="testDiv"></div>
+		<div id="adjacent2" class="testDiv"></div>
+		<div id="adjacent3" class="testDiv"></div>
+		<div id="adjacent4" class="testDiv"></div>
+	</div>
+</body>
+</html>
