@@ -44,12 +44,12 @@ class ScheduleDownloader{
             $type = "subgroup";
             $pieces = explode('.', $id);
             $object = "Sub_Group_" . $pieces[0] . "_" . $id;
-            $url = makeTimeeditUrl($object,$type);
+            $url = $this->makeTimeeditUrl($object,$type);
 
             // If not a correct schedule; it is a 5.
-            if (!isScheduleFound($url)) {
+            if (!$this->isScheduleFound($url)) {
                 $object = "CourseSub_CourseGroup_" . $pieces[0] . ".*_" . $id;
-                $url = makeTimeeditUrl($object,$type);
+                $url = $this->makeTimeeditUrl($object,$type);
             }
 
         }

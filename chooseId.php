@@ -31,7 +31,7 @@
 
 <div id="users">
 
-    <input class="search" placeholder="Search" onchange="updateLinks()" />
+    <input class="search" placeholder="Search" onchange="updateLinks()" autofocus />
 
 
     <ul class="list">

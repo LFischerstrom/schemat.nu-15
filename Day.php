@@ -4,7 +4,7 @@ require_once('ics-parser/class.iCalReader.php');
 
 class Day {
 
-    const STARTTIME = 8;
+    const STARTTIME =8;
     const ENDTIME = 18;
     const TIMEEDIT_TIMEZONE_BUG_CORRECTION_HOURS = 4;
     const DAY_HEADER_HEIGHT = 20;
@@ -28,22 +28,30 @@ class Day {
             $event = $this->dayEvents[$i];
             $eventStyle = "";
 
-            $eventStartTime =  iCalDateToUnixTimestamp($event['DTSTART']);
-            $eventStartTimeDateTime = DateTime::createFromFormat( 'U', $eventStartTime, new DateTimeZone("Europe/Stockholm"));
+            $eventStartTimeUnix =  iCalDateToUnixTimestamp($event['DTSTART']);
+            $eventStartTimeDateTime = DateTime::createFromFormat( 'U', $eventStartTimeUnix, new DateTimeZone("Europe/Stockholm"));
             $eventStartTimeHour = $eventStartTimeDateTime->format( 'H' ) + self::TIMEEDIT_TIMEZONE_BUG_CORRECTION_HOURS;
+            $eventStartTimeMinutes = $eventStartTimeDateTime->format( 'i' );
+            $eventStartTimeMinutesInHourFormat = $eventStartTimeMinutes / 60;
+            $eventStartTime = $eventStartTimeHour + $eventStartTimeMinutesInHourFormat;
+
 
             $eventEndTime = iCalDateToUnixTimestamp($event['DTEND']);
             $eventEndTimeDateTime = DateTime::createFromFormat('U',$eventEndTime, new DateTimeZone("Europe/Stockholm"));
             $eventEndTimeHour = $eventEndTimeDateTime->format( 'H' ) + self::TIMEEDIT_TIMEZONE_BUG_CORRECTION_HOURS;
+            $eventEndTimeMinutes = $eventEndTimeDateTime->format( 'i' );
+            $eventEndTimeMinutesInHourFormat = $eventEndTimeMinutes / 60;
+            $eventEndTime = $eventEndTimeHour + $eventEndTimeMinutesInHourFormat;
 
-            $eventStartTimePercentage = ($eventStartTimeHour - self::STARTTIME) / (self::ENDTIME - self::STARTTIME) * 100;
-            $eventHeightPercentage = ($eventEndTimeHour - $eventStartTimeHour) / (self::ENDTIME - self::STARTTIME) * 100 - 0.2;
+
+            $eventStartTimePercentage = ($eventStartTime  - self::STARTTIME) / (self::ENDTIME - self::STARTTIME) * 100;
+            $eventHeightPercentage = ($eventEndTime - $eventStartTime) / (self::ENDTIME - self::STARTTIME) * 100 - 0.2; // 0.2 is to prevent a div collision handling bug
 
             $eventStyle .= "top:" . $eventStartTimePercentage ."%;";
             $eventStyle .= "height:" . $eventHeightPercentage."%;";
 
             $html .= '<div class="event" style="'.$eventStyle.'">';
-            $html .= $eventStartTimeHour ." - ". $eventEndTimeHour ."<br />";
+            $html .= $eventStartTimeHour.".".$eventStartTimeMinutes ." - ". $eventEndTimeHour .".".$eventEndTimeMinutes ."<br />";
             $html .= str_replace("\\,",",<br />",@$event['SUMMARY']);
             $html .= '</div>' . "\r\n";
         }

@@ -29,6 +29,7 @@ $schedule = new Schedule($id);
     <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <link rel="stylesheet" type="text/css" href="css/event.css" />
     <link rel="stylesheet" type="text/css" href="fullPage.js/jquery.fullPage.css" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
     <script src="fullPage.js/vendors/jquery.easings.min.js"></script>
     <script src="fullPage.js/vendors/jquery.slimscroll.min.js"></script>
@@ -136,6 +137,7 @@ $schedule = new Schedule($id);
         var height = $( "#fullpage" ).height();
         var menuHeight = 50;
         $(".table").height(height - menuHeight);
+        $(".section").height(height);
     }
 
 

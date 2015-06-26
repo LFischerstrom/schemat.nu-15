@@ -13,38 +13,56 @@ class Schedule {
     private $events;
     private $startWeek;
     private $endWeek;
+    private $startYear;
+    private $endYear;
 
     function __construct($id){
         $this->id = $id;
         $sd = new ScheduleDownloader();
         $this->icsFilePath = $sd->getFilePath($this->id);
         // for testing
-        // $this->icsFilePath = "ics-parser/MyCal.ics";
+        //$this->icsFilePath = "ics-parser/MyCal.ics";
         $this->ics = file_get_contents($this->icsFilePath);
         $this->ical = new ICal($this->icsFilePath);
         $this->events = $this->ical->events();
         $this->startWeek = $this->setStartWeek($this->events);
         $this->endWeek = $this->setEndWeek($this->events);
+        $this->startYear = $this->setStartYear($this->events);
+        $this->endYear = $this->setEndYear($this->events);
     }
 
-    // TODO: Must consider year!
     public function printSchedule(){
         $content = "";
+        $year = $this->startYear;
+        $numberOfWeeks = $this->getNumberOfWeeks();
+        $currentWeek = $this->startWeek;
 
         // Prints all weeks
-        for ($currentWeek=$this->startWeek; $currentWeek < $this->endWeek +1; $currentWeek++){
-            $week = new Week($this->events, 2015, $currentWeek);
-            $content .= $week->getWeek();
+        for ($i=0; $i<$numberOfWeeks; $i++){
+            if ($currentWeek == 54){
+                $currentWeek = 1;
+                $year++;
+            }
+            $week = new Week($this->events, $year, $currentWeek);
+            $content .= $week->getWeekContent();
+            $currentWeek++;
         }
         print $content;
     }
 
     public function getMenuListItems(){
         $listItems = "";
+        $year = $this->startYear;
+        $currentWeek = $this->startWeek;
+
         for($i=0;$i<$this->getNumberOfWeeks();$i++){
-            $currentWeek = $this->startWeek+$i;
-            $listItems .= '<li data-menuanchor="week'.$currentWeek.'" ';
-            $listItems .= '><a href="#week'.$currentWeek.'">'.$currentWeek.'</a></li>';
+            $listItems .= '<li data-menuanchor="week'.$currentWeek.'-'.$year.'" ';
+            $listItems .= '><a href="#week'.$currentWeek.'-'.$year.'">'.$currentWeek.'</a></li>';
+            $currentWeek++;
+            if ($currentWeek == 54){
+                $currentWeek = 1;
+                $year++;
+            }
         }
         print $listItems . "<br />";
     }
@@ -53,28 +71,55 @@ class Schedule {
         // anchors on form:
         // anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage', 'lastPage','afterpage'],
         $anchorString = " anchors: [";
+        $year = $this->startYear;
+        $currentWeek = $this->startWeek;
         for($i=0;$i<$this->getNumberOfWeeks();$i++){
-            $currentWeek = $this->startWeek+$i;
-            $anchorString .= "'week".$currentWeek."', ";
+            $anchorString .= "'week".$currentWeek."-".$year."', ";
+            $currentWeek++;
+            if ($currentWeek == 54){
+                $currentWeek = 1;
+                $year++;
+            }
         }
         $anchorString .= "],";
         return $anchorString;
     }
 
+    private function setScheduleTimeLimits($allEvents, $isStart, $idateSymbol){
+        if($isStart) $token = "DTSTART";
+        else $token = "DTEND";
+        $wantedEventTime = null;
+        foreach ($allEvents as $currentEvent) {
+            $currentEventTime = iCalDateToUnixTimestamp($currentEvent[$token]);
+            if ($wantedEventTime == null) $wantedEventTime = $currentEventTime;
+            if ($isStart){
+                if ($currentEventTime < $wantedEventTime) $wantedEventTime = $currentEventTime;
+            }
+            else if ($currentEventTime > $wantedEventTime) $wantedEventTime = $currentEventTime;
+        }
+        return idate($idateSymbol, $wantedEventTime) ;
+    }
+
     private function setStartWeek($allEvents){
-        $startEvent = $allEvents[0];
-        $eventStartTime =  iCalDateToUnixTimestamp($startEvent['DTSTART']);
-        return idate('W', $eventStartTime);
+        return $this->setScheduleTimeLimits($allEvents, true, "W");
     }
 
     private function setEndWeek($allEvents){
-        $endEvent = $allEvents[sizeof($allEvents)-1];
-        $eventEndTime = iCalDateToUnixTimestamp($endEvent['DTEND']);
-        return idate('W', $eventEndTime);
+        return $this->setScheduleTimeLimits($allEvents, false, "W");
+    }
+
+    private function setStartYear($allEvents){
+        return $this->setScheduleTimeLimits($allEvents, true, "Y");
+    }
+
+    private function setEndYear($allEvents){
+        return $this->setScheduleTimeLimits($allEvents, false, "Y");
     }
 
     public function getNumberOfWeeks(){
-        return $this->endWeek - $this->startWeek + 1;
+        $numberOfWeeks = ($this->endYear - $this->startYear)*53;
+        $numberOfWeeks += $this->endWeek - $this->startWeek + 1;
+        return $numberOfWeeks;
     }
 
     public function getStartWeek(){
