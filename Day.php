@@ -21,6 +21,12 @@ class Day {
         $this->dayEvents = $this->getEventsOnDate($this->allEvents);
     }
 
+    // TODO: Fix to real today.
+    public function isToday(){
+        if ($this->dateString == "2015-08-19" ) return true;
+        return false;
+    }
+
     public function getDayHtml(){
         $html= "";
 
@@ -45,7 +51,7 @@ class Day {
 
 
             $eventStartTimePercentage = ($eventStartTime  - self::STARTTIME) / (self::ENDTIME - self::STARTTIME) * 100;
-            $eventHeightPercentage = ($eventEndTime - $eventStartTime) / (self::ENDTIME - self::STARTTIME) * 100 - 0.2; // 0.2 is to prevent a div collision handling bug
+            $eventHeightPercentage = ($eventEndTime - $eventStartTime) / (self::ENDTIME - self::STARTTIME) * 100 - 0; // 0.2 is to prevent a div collision handling bug
 
             $eventStyle .= "top:" . $eventStartTimePercentage ."%;";
             $eventStyle .= "height:" . $eventHeightPercentage."%;";
@@ -58,7 +64,7 @@ class Day {
         return $html;
     }
 
-      public function hasEventsOnDate(){
+    public function hasEventsOnDate(){
         foreach ($this->events as $event) {
             $eventStartUnix = iCalDateToUnixTimestamp($event['DTSTART']);
             $eventStartDate = new DateTime('@' . $eventStartUnix);
