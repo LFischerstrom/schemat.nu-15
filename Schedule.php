@@ -2,6 +2,7 @@
 require_once('ScheduleDownloader.php');
 require_once('Day.php');
 require_once('Week.php');
+require_once('Event.php');
 require_once('ics-parser/class.iCalReader.php');
 
 
@@ -9,7 +10,6 @@ class Schedule {
 
     private $id;
     private $icsFilePath;
-    private $ical;
     private $events;
     private $startWeek;
     private $endWeek;
@@ -22,13 +22,24 @@ class Schedule {
         $this->icsFilePath = $sd->getFilePath($this->id);
         // for testing
         //$this->icsFilePath = "ics-parser/MyCal.ics";
-        $this->ics = file_get_contents($this->icsFilePath);
-        $this->ical = new ICal($this->icsFilePath);
-        $this->events = $this->ical->events();
+        $this->events = $this->generateEvents();
         $this->startWeek = $this->setStartWeek($this->events);
         $this->endWeek = $this->setEndWeek($this->events);
         $this->startYear = $this->setStartYear($this->events);
         $this->endYear = $this->setEndYear($this->events);
+
+    }
+
+
+    private function generateEvents(){
+        $ical = new ICal($this->icsFilePath);
+        $icalEvents = $ical->events();
+        $events = array();
+
+        foreach ($icalEvents as $icalEvent){
+            array_push($events, new Event($icalEvent));
+        }
+        return $events;
     }
 
     public function printSchedule(){
@@ -90,7 +101,7 @@ class Schedule {
         else $token = "DTEND";
         $wantedEventTime = null;
         foreach ($allEvents as $currentEvent) {
-            $currentEventTime = iCalDateToUnixTimestamp($currentEvent[$token]);
+            $currentEventTime = iCalDateToUnixTimestamp($currentEvent->icalEvent[$token]);
             if ($wantedEventTime == null) $wantedEventTime = $currentEventTime;
             if ($isStart){
                 if ($currentEventTime < $wantedEventTime) $wantedEventTime = $currentEventTime;

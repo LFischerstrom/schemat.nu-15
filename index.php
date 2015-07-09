@@ -4,7 +4,6 @@ require_once('Schedule.php');
 
 // if no cookie -> choose id;
 if(!isset($_COOKIE['SchematId'])) {
-
     if($_SERVER["HTTP_HOST"] == "localhost") header('Location: '."/Schemat.nu-15/chooseId.php");
     else header('Location: '."/chooseId.php");
 }
@@ -15,7 +14,7 @@ $id = $_COOKIE['SchematId'];
 
 // Downloading current schedule
 $downloader = new ScheduleDownloader();
-//$downloadedFilePath = $downloader->downloadSchedule($id);
+// $downloadedFilePath = $downloader->downloadSchedule($id);
 
 // Printing schedule
 $schedule = new Schedule($id);
@@ -39,17 +38,121 @@ $schedule = new Schedule($id);
 
     <script>
 
+        // more info
         $(document).ready(function(){
+
+            $(".moreInfo").toggle();
+            $(".event").click(function(){
+                $(this).find(".moreInfo").toggle();
+            });
+
+            // Settings
             $("#popupMenu").toggle();
             $(".button").click(function(){$("#popupMenu").toggle();});
             $("li").click(function(){$("#popupMenu").toggle();});
-        });
 
-        // sets the week number header
-        $(document).ready(function(){
+
+            // sets the week number header
             var hash = window.location.hash;
             var weekNumber = hash.match(/\d+/);
             if (weekNumber != null) $('#currentWeekNumber').text('Vecka ' + weekNumber);
+
+            // Fixing overlapping events:
+            var allOverlappingDivs = $('.event').overlaps();
+            $.each(allOverlappingDivs, function(index, currentDiv) {
+                if (!$(currentDiv).hasClass("overlapFixed")){
+                    $(currentDiv).addClass("currentDiv");
+                    var allDivsThatOverlapsCurrentDiv = $(".event").overlaps(".currentDiv");
+                    var allDivsThatOverlapsCurrentDivIncludingCurrentDiv = allDivsThatOverlapsCurrentDiv.add(currentDiv);
+                    var numberOfDivs = allDivsThatOverlapsCurrentDivIncludingCurrentDiv.size();
+                    $.each(allDivsThatOverlapsCurrentDivIncludingCurrentDiv, function(index, currentOverlappingDiv) {
+                        var width = 100 / numberOfDivs;
+                        $(currentOverlappingDiv).css("width", width + "%");
+                        $(currentOverlappingDiv).css("left", ((index+1)/numberOfDivs - 1/numberOfDivs)*100 + "%");
+                        $(currentOverlappingDiv).addClass("overlapFixed");
+                    });
+                    $(currentDiv).removeClass("currentDiv");
+                }
+            });
+
+
+            fixTableHeight();
+            fixResponsiveDays();
+            removePartlyHiddenTextLinesInRest();
+
+
+            $(window).on('resize', function(){
+                fixTableHeight();
+                fixResponsiveDays();
+                removePartlyHiddenTextLinesInRest();
+            });
+
+
+            // Fixing height bug
+            function fixTableHeight(){
+                var height = $( "#fullpage" ).height();
+                var menuHeight = 50;
+                $(".table").height(height - menuHeight);
+                $(".section").height(height);
+            }
+
+
+            function fixResponsiveDays(){
+                var numberOfDays = $('.cell', $($(".section").first())).length;
+                var daysToShow = numberOfDays;
+                var daysToScroll = numberOfDays;
+                var width = $( "#fullpage" ).width();
+
+                if (width > 800){
+                    daysToShow = numberOfDays;
+                }
+                else {
+                    if (numberOfDays == 5) daysToShow = 3;
+                    else if (numberOfDays == 6) daysToShow = 3;
+                    else if (numberOfDays == 7) daysToShow = 4;
+                }
+
+                daysToScroll = numberOfDays - daysToShow;
+
+                var slides = $(".slide");
+                $(".fp-slidesContainer").width(100 * numberOfDays/daysToShow + "%");
+                slides.each(function() {
+                    $(this).css('width', 100 * daysToScroll/numberOfDays + '%');
+                });
+            }
+
+            function removePartlyHiddenTextLinesInRest(){
+                var events = $(".event");
+                var bordersAndPadding = 8;
+
+                events.each(function(){
+                    var restWidth = $(this).find(".rest").width();
+                    var restHeight = $(this).height() - $(this).find(".time").height() - $(this).find(".eventRow").height() - bordersAndPadding;
+
+                    // removes single line if it is not fully visible
+                    $(this).find(".wrapper")
+                        .css('-webkit-column-width',restWidth + "px")
+                        .css('column-width',restWidth + "px")
+                        .css('height',restHeight+ 'px');
+                    if (restHeight < 16) $(this).find(".rest").css("display","none");
+                    else $(this).find(".rest").css("display","inline");
+
+                    // removes end time if box is too small
+                    if ($(this).width() < 80) $(this).find(".end").css("display","none");
+                    else $(this).find(".end").css("display","inline");
+
+                    // hide course box if overflowing and moving course text to rest div.
+                    $(this).find(".course").css("display","inline");
+                    $(this).find(".courseText").remove();
+                    var eventRowWidth = $(this).find(".eventRow").width();
+                    var eventWidth = $(this).width();
+                    if (eventRowWidth > eventWidth){
+                        var courseText = $(this).find(".course").text();
+                        $(this).find(".course").css("display","none");
+                        $(this).find(".wrapper").prepend("<span class='courseText'>" + courseText + "<br /></span>");
+                    }
+                })
+            }
         });
 
         // updates the week number header when changed week
@@ -61,12 +164,8 @@ $schedule = new Schedule($id);
     </script>
 
 
-
 </head>
 <body>
-
-
-
 
 <div id="popupMenu">
     <ul id="menu">
@@ -85,9 +184,7 @@ $schedule = new Schedule($id);
 </header>
 
 <div id="fullpage">
-
     <?php $schedule->printSchedule(); ?>
-
 </div>
 
 
@@ -98,74 +195,7 @@ $schedule = new Schedule($id);
     });
 </script>
 
-
-<script>
-
-    // Fixing overlapping events:
-    var allOverlappingDivs = $('.event').overlaps();
-    $.each(allOverlappingDivs, function(index, currentDiv) {
-        if (!$(currentDiv).hasClass("overlapFixed")){
-            $(currentDiv).addClass("currentDiv");
-            var allDivsThatOverlapsCurrentDiv = $(".event").overlaps(".currentDiv");
-            var allDivsThatOverlapsCurrentDivIncludingCurrentDiv = allDivsThatOverlapsCurrentDiv.add(currentDiv);
-            var numberOfDivs = allDivsThatOverlapsCurrentDivIncludingCurrentDiv.size();
-            $.each(allDivsThatOverlapsCurrentDivIncludingCurrentDiv, function(index, currentOverlappingDiv) {
-                var width = 100 / numberOfDivs;
-                $(currentOverlappingDiv).css("width", width + "%");
-                $(currentOverlappingDiv).css("left", ((index+1)/numberOfDivs - 1/numberOfDivs)*100 + "%");
-                $(currentOverlappingDiv).addClass("overlapFixed");
-            });
-            $(currentDiv).removeClass("currentDiv");
-        }
-    });
-
-</script>
-
 <p></p>
-
-<script>
-    // Fixing height bug
-    fixTableHeight();
-    fixResponsiveDays();
-
-    $(window).on('resize', function(){
-        fixTableHeight();
-        fixResponsiveDays();
-    });
-
-    function fixTableHeight(){
-        var height = $( "#fullpage" ).height();
-        var menuHeight = 50;
-        $(".table").height(height - menuHeight);
-        $(".section").height(height);
-    }
-
-
-    function fixResponsiveDays(){
-        var numberOfDays = $('.cell', $($(".section").first())).length;
-        var daysToShow = numberOfDays;
-        var daysToScroll = numberOfDays;
-        var width = $( "#fullpage" ).width();
-
-        if (width > 800){
-            daysToShow = numberOfDays;
-        }
-        else {
-            if (numberOfDays == 5) daysToShow = 3;
-            else if (numberOfDays == 6) daysToShow = 3;
-            else if (numberOfDays == 7) daysToShow = 4;
-        }
-
-        daysToScroll = numberOfDays - daysToShow;
-
-        var slides = $(".slide");
-        $(".fp-slidesContainer").width(100 * numberOfDays/daysToShow + "%");
-        slides.each(function(index) {
-            $(this).css('width', 100 * daysToScroll/numberOfDays + '%');
-        });
-    }
-
-</script>
 
 
 </body>

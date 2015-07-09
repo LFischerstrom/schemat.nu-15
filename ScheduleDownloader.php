@@ -4,6 +4,9 @@
 class ScheduleDownloader{
 
     const DEFAULT_FILE_PATH = "schedules/";
+    const LOCATION_MARKUP = "Sal: ";
+    const LOCATION_MARKUP_FILE = "locations.txt";
+
 
     public function getFilePath($id){
         return self::DEFAULT_FILE_PATH . $id . ".txt";
@@ -19,7 +22,6 @@ class ScheduleDownloader{
         if (strpos(file_get_contents($url),"Schemat kunde inte skapas") !== false) return false;
         else return true;
     }
-
 
     private function getTimeeditScheduleUrl(){
         $id = $_COOKIE['SchematId'];
@@ -99,6 +101,9 @@ class ScheduleDownloader{
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
+
+        $icsContent = $this->makeLocationMarkups($icsContent);
+
         file_put_contents($directory . $newFile, $icsContent);
         $filePath = $directory .$newFile;
         return $filePath;
@@ -137,6 +142,19 @@ class ScheduleDownloader{
     }
 
 
+
+    // if finding any location from locations.txt, markup will be put.
+    public function makeLocationMarkups($icsContent){
+        $locations = file_get_contents(self::LOCATION_MARKUP_FILE);
+        $regex = "#(";
+        $regex .= preg_replace("/\r\n|\n|\r/","| ",$locations);
+        $regex .= ")#";
+        $icsContent = preg_replace_callback($regex,"callback",$icsContent);
+        return $icsContent;
+    }
+
+
+
 }
 
 
@@ -144,4 +162,8 @@ class ScheduleDownloader{
 function contains($string, $find){
     if (strpos($string,$find) !== false) return true;
     else return false;
+}
+
+function callback ($match) {
+    return "Sal: " . $match[0];
 }

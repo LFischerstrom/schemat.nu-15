@@ -91,10 +91,6 @@ h1 {
     display: none;
 }
 
-header, .today{
-    background-color: #06B700;
-    color:white;
-}
 
 .cell, .weekdayHeader{
     border: 0;
@@ -105,10 +101,21 @@ header, .today{
     box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
 }
 
+header, .today{
+    background-color: #2b81af;
+    color:white;
+}
+
+
 .event {
-    background-color: #E5E503;
+    background-color: gold;
+}
+
+.event .eventRow{
+    background-color:  rgba(150,0,0, 0.2);
+
 }
 
 .cell{
-    background-color: #fcfcfc;
+    background-color: #fbfbfb;
 }
