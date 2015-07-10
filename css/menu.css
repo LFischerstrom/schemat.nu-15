@@ -1,8 +1,6 @@
 #menu li {
-    display:inline-block;
+    display: inline-block;
     margin: 7px;
-    color: #000;
-    background:#fff;
     background: rgba(255,255,255, 0.5);
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -16,11 +14,9 @@
 #menu li.active{
     background:#666;
     background: rgba(0,0,0, 0.5);
-    color: #fff;
 }
 #menu li a{
     text-decoration:none;
-    color: #000;
 }
 #menu li.active a:hover{
     color: #000;
@@ -45,7 +41,9 @@
     z-index: 70;
     padding: 7px;
     margin:0;
-    background-color: darkslateblue;
     text-align: right;
 }
 
+#popupMenu{
+    display: none;
+}

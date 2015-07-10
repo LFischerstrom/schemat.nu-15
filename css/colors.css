@@ -1,0 +1,24 @@
+
+header, .today, #menu{
+    background-color: #2b81af;
+    color:white;
+}
+
+
+.event {
+    background-color: gold;
+}
+
+.event .eventRow{
+    background-color:  rgba(150,0,0, 0.2);
+
+}
+
+.cell{
+    background-color: #fbfbfb;
+}
+
+.event .moreInfo .header {
+    background-color: #2b81af ;
+    color: #ffffff;
+}

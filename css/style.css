@@ -2,6 +2,8 @@ body, html{
     height: 100%;
     margin:0;
     padding:0;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 body{
@@ -24,7 +26,7 @@ body{
 
 .cell {
     display: table-cell;
-    border-width: 0 1px;
+    border-width: 0 0px;
     position: relative;
     text-align: center;
 }
@@ -76,9 +78,10 @@ h1 {
 .weekdayHeader{
     width: 100%;
     height: 20px;
-    border-width: 0 0 2px 0;
+    border: 0 solid rgba(0, 0, 0, 0.15);
+    border-bottom-width: 2px;
     padding-bottom: 0;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 20px 20px;
     margin-top: -1px;
 }
 
@@ -92,30 +95,10 @@ h1 {
 }
 
 
-.cell, .weekdayHeader{
-    border: 0;
-    border-color: #06B700;
-    border-style: solid;
+.cell{
+    border: 0 solid #06B700;
     -webkit-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
     box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
 }
 
-header, .today{
-    background-color: #2b81af;
-    color:white;
-}
-
-
-.event {
-    background-color: gold;
-}
-
-.event .eventRow{
-    background-color:  rgba(150,0,0, 0.2);
-
-}
-
-.cell{
-    background-color: #fbfbfb;
-}

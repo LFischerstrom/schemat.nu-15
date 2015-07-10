@@ -1,0 +1,41 @@
+
+.event .moreInfo{
+
+    position: fixed;
+    display: none;
+    top: calc(10% + 50px);
+
+    text-align: left;
+    z-index: 100;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 0px;
+    padding: 20px;
+
+}
+
+.event .moreInfo {
+    padding: 0 ;
+}
+
+.event .moreInfo h2{
+    margin: 0;
+}
+
+.event .moreInfo .content{
+    padding: 10px;
+}
+
+.event .header{
+    display: table;
+    width: 100%;
+    font-size: 1.4em;
+
+}
+
+.event .header div {
+    display: table-cell;
+    padding:10px;
+    text-align: center;
+
+}

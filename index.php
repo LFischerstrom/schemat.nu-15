@@ -25,8 +25,10 @@ $schedule = new Schedule($id);
     <title>Schemat.nu</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/moreInfo.css" />
     <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <link rel="stylesheet" type="text/css" href="css/event.css" />
+    <link rel="stylesheet" type="text/css" href="css/colors.css" />
     <link rel="stylesheet" type="text/css" href="fullPage.js/jquery.fullPage.css" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
@@ -38,18 +40,85 @@ $schedule = new Schedule($id);
 
     <script>
 
-        // more info
+
+        // Event more info width and position
         $(document).ready(function(){
 
-            $(".moreInfo").toggle();
-            $(".event").click(function(){
-                $(this).find(".moreInfo").toggle();
+            var initEventBgColor= $(".event:first").css("background-color");
+            var initCellBgColor= $(".cell:first").css("background-color");
+
+            function dimScreen($bool){
+
+                if ($bool){
+                    $(".event").css("cursor", "initial");
+                    $(".event").css("background-color", "rgba(0 ,0,0,0.3)");
+                    $(".cell").css("background-color", "rgba(0 ,0,0,0.3)");
+                }
+                else {
+                    $(".event").css("cursor", "pointer");
+                    $(".event").css("background-color", initEventBgColor);
+                    $(".cell").css("background-color", initCellBgColor);
+                }
+            }
+
+            var clickedMoreInfo = null;
+            var clickedMenu = null;
+            var menu = $("#popupMenu");
+
+
+            $(document).click(function() {
+                if (clickedMoreInfo != null && clickedMenu == null){
+                    clickedMoreInfo.toggle();
+                    dimScreen(true);
+                    // After the moreInfo box been closed
+                    if ( clickedMoreInfo.css("display") == "none"){
+                        dimScreen(false);
+                        clickedMoreInfo = null;
+                    }
+                }
             });
 
-            // Settings
-            $("#popupMenu").toggle();
-            $(".button").click(function(){$("#popupMenu").toggle();});
-            $("li").click(function(){$("#popupMenu").toggle();});
+
+
+            // Make moreInfo box
+            $(".event").click(function(){
+                var activeSlide = $('.slide.active');
+                var activeSlideWidth = activeSlide.width();
+                var activeSlidePos = activeSlide.position().left;
+                if (activeSlideWidth > 300) var moreInfoWidth = 300;
+                else var moreInfoWidth = activeSlideWidth*0.8;
+                var left = activeSlidePos + (activeSlideWidth - moreInfoWidth)/2;
+                var moreInfo = $(this).find(".moreInfo");
+                moreInfo.width(moreInfoWidth);
+                moreInfo.css("left",left + "px");
+
+                // Opens moreInfo box if no other already is open.
+                if (clickedMoreInfo == null) clickedMoreInfo = moreInfo;
+
+            });
+
+
+
+            // Menu
+            $(document).click(function(){
+                if (clickedMenu != null){
+                    menu.toggle();
+                    if (clickedMoreInfo != null){
+                        clickedMoreInfo.hide();
+                        clickedMoreInfo = null;
+                    }
+                    dimScreen(true);
+                    if ( menu.css("display") == "none"){
+                        dimScreen(false);
+                        clickedMenu = null;
+                    }
+                }
+
+            });
+
+            $(".button").click(function(){
+                if (clickedMenu == null) clickedMenu = menu;
+            });
 
 
             // sets the week number header
@@ -196,7 +265,6 @@ $schedule = new Schedule($id);
 </script>
 
 <p></p>
-
 
 </body>
 </html>
