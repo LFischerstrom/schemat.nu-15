@@ -15,6 +15,8 @@ class Schedule {
     private $endWeek;
     private $startYear;
     private $endYear;
+    private $errorMessage;
+    private $error = false;
 
     function __construct($id){
         $this->id = $id;
@@ -22,43 +24,60 @@ class Schedule {
         $this->icsFilePath = $sd->getFilePath($this->id);
         // for testing
         //$this->icsFilePath = "ics-parser/MyCal.ics";
-        $this->events = $this->generateEvents();
-        $this->startWeek = $this->setStartWeek($this->events);
-        $this->endWeek = $this->setEndWeek($this->events);
-        $this->startYear = $this->setStartYear($this->events);
-        $this->endYear = $this->setEndYear($this->events);
+
+        $ical = new ICal($this->icsFilePath);
+        $icalEvents = $ical->events();
+        if (!isset($icalEvents) || $icalEvents == null || $icalEvents == "") {
+            $this->error = true;
+            $this->errorMessage = "Inga bokningar hittade för $id";
+        }
+        else {
+            $this->events = $this->generateEvents($icalEvents);
+            $this->startWeek = $this->setStartWeek($this->events);
+            $this->endWeek = $this->setEndWeek($this->events);
+            $this->startYear = $this->setStartYear($this->events);
+            $this->endYear = $this->setEndYear($this->events);
+        }
+
 
     }
 
 
-    private function generateEvents(){
-        $ical = new ICal($this->icsFilePath);
-        $icalEvents = $ical->events();
+    private function generateEvents($icalEvents){
         $events = array();
-
         foreach ($icalEvents as $icalEvent){
             array_push($events, new Event($icalEvent));
         }
         return $events;
     }
 
-    public function printSchedule(){
-        $content = "";
-        $year = $this->startYear;
-        $numberOfWeeks = $this->getNumberOfWeeks();
-        $currentWeek = $this->startWeek;
+    public function printSchedule()
+    {
 
-        // Prints all weeks
-        for ($i=0; $i<$numberOfWeeks; $i++){
-            if ($currentWeek == 54){
-                $currentWeek = 1;
-                $year++;
-            }
-            $week = new Week($this->events, $year, $currentWeek);
-            $content .= $week->getWeekContent();
-            $currentWeek++;
+        if ($this->error) {
+            print '<div id="error">' . $this->getErrorMessage() . "</div>";
         }
-        print $content;
+
+            $content = "";
+            $year = $this->startYear;
+            $numberOfWeeks = $this->getNumberOfWeeks();
+            $currentWeek = $this->startWeek;
+
+            // Prints all weeks
+
+
+            for ($i = 0; $i < $numberOfWeeks; $i++) {
+                if ($currentWeek == 54) {
+                    $currentWeek = 1;
+                    $year++;
+                }
+                $week = new Week($this->events, $year, $currentWeek);
+                $content .= $week->getWeekContent();
+                $currentWeek++;
+            }
+
+            print $content;
+
     }
 
     public function getMenuListItems(){
@@ -137,4 +156,7 @@ class Schedule {
         return $this->startWeek;
     }
 
+    private function getErrorMessage(){
+        return $this->errorMessage;
+    }
 }
