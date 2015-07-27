@@ -1,14 +1,22 @@
 <?php
-
+require_once('MyLog.php');
+require_once("Miner.php");
 
 class ScheduleDownloader{
 
     const DEFAULT_FILE_PATH = "schedules/";
     const LOCATION_MARKUP = "Sal: ";
     const LOCATION_MARKUP_FILE = "locations.txt";
+    const ID_FILE = "idList.txt";
 
+    private $log;
+
+    public function __construct(){
+        $this->log = new MyLog();
+    }
 
     public function getFilePath($id){
+        $id = str_replace("*","@",$id);
         return self::DEFAULT_FILE_PATH . $id . ".txt";
     }
 
@@ -19,57 +27,12 @@ class ScheduleDownloader{
     }
 
     private function isScheduleFound($url){
-        if (strpos(file_get_contents($url),"Schemat kunde inte skapas") !== false) return false;
-        else return true;
-    }
-
-    private function getTimeeditScheduleUrl(){
-        $id = $_COOKIE['SchematId'];
-
-        // 5 different possible types and object in url:
-        //      --EXAMPLE--    --TYPE--         --OBJECT--
-        // 1.   Group_IT1      studentgroup     Group_IT1
-        // 2.   EMM2.a         subgroup         Sub_Group_EMM2_EMM2.a
-        // 3.   ÄGY3           studentgroup     CourseGroup_ÄGY3
-        // 4.   711626.*       studentgroup     CourseGroup_711626.*
-        // 5.   711626.01      subgroup         CourseSub_CourseGroup_711626.*_711626.01
-
-        // 4. Contains *
-        if (contains($id,"*")){
-            $type = "studentgroup";
-            $object = "CourseGroup_" . $id;
-            $url = $this->makeTimeeditUrl($object,$type);
+        if (strpos(file_get_contents($url),"Schemat kunde inte skapas") !== false){
+            return false;
         }
-
-        // 2. Contains dot, force try 2.
-        else if (contains($id,".")){
-            $type = "subgroup";
-            $pieces = explode('.', $id);
-            $object = "Sub_Group_" . $pieces[0] . "_" . $id;
-            $url = $this->makeTimeeditUrl($object,$type);
-
-            // If not a correct schedule; it is a 5.
-            if (!$this->isScheduleFound($url)) {
-                $object = "CourseSub_CourseGroup_" . $pieces[0] . ".*_" . $id;
-                $url = $this->makeTimeeditUrl($object,$type);
-            }
-
+        else{
+            return true;
         }
-
-        // 3. No dot. Force try 3.
-        else {
-            $type = "studentgroup";
-            $object = "CourseGroup_" . $id;
-            $url = $this->makeTimeeditUrl($object,$type);
-
-            // If not a correct schedule; it is a 1.
-            if (!$this->isScheduleFound($url)){
-                $object = "Group_" . $id;
-                $url = $this->makeTimeeditUrl($object,$type);
-            }
-        }
-
-        return $url;
     }
 
     // Finding the ics link in iCalDialogContent-div, option 3.
@@ -94,7 +57,6 @@ class ScheduleDownloader{
     private function saveIcsFile($icsUrl, $id){
 
         if(contains($id,"*")) $id = str_replace("*","@", $id);
-
         $newFile = $id.".txt";
         $directory = SELF::DEFAULT_FILE_PATH;
         $icsContent = file_get_contents($icsUrl);
@@ -109,39 +71,40 @@ class ScheduleDownloader{
         return $filePath;
     }
 
-    /* TODO: Not working */
-    function updateAllSchedules(){
-        $handle = fopen("idList.txt", "r");
-        if ($handle) {
+    function downloadSchedules($offset, $amount){
 
+        $miner = new Miner();
+        $allIds = $miner->getGroupsAndCourses();
+        $counter = 0;
+        $downloadedSchedules = 0;
 
-            while (($line = fgets($handle)) !== false) {
+        foreach ($allIds as $id => $timeeditCode) {
+            if($counter++ < $offset) continue;
+            if($downloadedSchedules >= $amount) return;
 
-                print $line;
-                $timeeditScheduleUrl =  $this->getTimeeditScheduleUrl();
-                print  $timeeditScheduleUrl ."<br />";
-                $icsLink = findIcsLink($timeeditScheduleUrl);
-                print  $icsLink ."<br />";
-                saveIcsFile($icsLink, $line);
-                break;
+            if (contains($timeeditCode,"*")) $type = "studentgroup";
+            else if (contains($timeeditCode,"_")) $type = "subgroup";
+            else if (contains($timeeditCode,"CM_")) $type = "courseevt";
+            else $type = "studentgroup";
 
-            }
+            $timeeditUrl = $this->makeTimeeditUrl($timeeditCode, $type);
+            $this->downloadSchedule($id, $timeeditUrl);
+            $fileSize = round(filesize("schedules/". $id . ".txt")/1000,1);
 
-            fclose($handle);
-        } else {
-            // error opening the file.
-            print "ERROR?!?!?!";
+            if ($fileSize == 0) $this->log->write("ERROR: Downloading " . $id . " | ". $timeeditUrl . " | " . $timeeditCode ."\n");
+            else $this->log->write("Downloaded: " . $id . " | " . $fileSize  . " Kb \n");
+
+            print nl2br($this->log->readBackwards(100));
+
+            $downloadedSchedules++;
         }
     }
 
-    public function downloadSchedule($id){
-        $timeeditScheduleUrl =  $this->getTimeeditScheduleUrl();
-        $icsLink = $this->findIcsLink($timeeditScheduleUrl);
+    public function downloadSchedule($id, $timeeditCode){
+        $icsLink = $this->findIcsLink($timeeditCode);
         $icsFilePath = $this->saveIcsFile($icsLink, $id);
         return $icsFilePath;
     }
-
-
 
     // if finding any location from locations.txt, markup will be put.
     public function makeLocationMarkups($icsContent){
@@ -152,9 +115,6 @@ class ScheduleDownloader{
         $icsContent = preg_replace_callback($regex,"callback",$icsContent);
         return $icsContent;
     }
-
-
-
 }
 
 
