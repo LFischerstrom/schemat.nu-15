@@ -3,11 +3,14 @@ require_once('Event.php');
 
 class Week {
     private $dayNames;
-    private $numberOfDaysInWeek = 6;
+    private $numberOfDaysInWeek;
     private $events;
     private $year;
     private $weekNumber;
     private $mondayDate;
+    private $weekDaysWithEvents;
+    private $latestEnd;
+    private $earliestStart;
 
     function __construct($events, $year, $weekNumber){
         $this->year = $year;
@@ -15,6 +18,7 @@ class Week {
         $this->dayNames = $this->getDayNames();
         $this->mondayDate = $this->getMondayDate();
         $this->events = $this->getEventsForWeek($events);
+        $this->numberOfDaysInWeek = $this->getNumberOfDaysInWeek();
     }
 
     private function getMondayDate(){
@@ -49,7 +53,7 @@ class Week {
         $daysContent ="";
         $date = clone $this->mondayDate;
         for ($i=0; $i < $this->numberOfDaysInWeek; $i++){
-            $day = new Day($date, $this->events);
+            $day = new Day($date, $this->events, $this->earliestStart, $this->latestEnd);
             $daysContent .= '<div class="cell">';
 
             if ($day->isToday()) $todayClass = "today";
@@ -91,13 +95,32 @@ class Week {
 
     private function getEventsForWeek($events){
         $eventsInWeek = array();
+        $this->weekDaysWithEvents = array(false);
+        $this->earliestStart = "8";
+        $this->latestEnd = "17";
         $weekStartUnix = strtotime($this->mondayDate->format('Y-m-d'));
         $weekEndUnix = strtotime($this->getSundayDate()->format("Y-m-d 23:59:59"));
+
+        if (!isset($events)) return $eventsInWeek;
         foreach ($events as $event) {
             if ($event->getStartTimeUnix() > $weekStartUnix && $event->getStartTimeUnix() < $weekEndUnix){
                 array_push($eventsInWeek, $event);
+                $this->weekDaysWithEvents[date('N', $event->getStartTimeUnix())] = true;
+                if ((int) $event->getStartTimeHour() < $this->earliestStart){
+                    $this->earliestStart = (int) $event->getStartTimeHour();
+                }
+                if ((int) $event->getEndTimeHour() > $this->latestEnd){
+                    $this->latestEnd = (int) $event->getEndTimeHour();
+                }
             }
         }
         return $eventsInWeek;
+    }
+
+    private function getNumberOfDaysInWeek()
+    {
+        if (isset($this->weekDaysWithEvents[7])) return 7;
+        else if (isset($this->weekDaysWithEvents[6])) return 6;
+        else return 5;
     }
 }

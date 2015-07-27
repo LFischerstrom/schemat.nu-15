@@ -25,6 +25,7 @@ class Event
     private $course;
     private $summary;
     private $allSummary;
+    private $multipleLocations;
 
 
     function __construct($icalEvent)
@@ -103,6 +104,7 @@ class Event
     private function getLocationDiv(){
         $html = '<div class="location">';
         $html .= $this->location;
+        if ($this->multipleLocations) $html .= "...";
         $html .= '</div>';
         return $html;
     }
@@ -136,6 +138,14 @@ class Event
         return $this->endTime;
     }
 
+    public function getStartTimeHour(){
+        return $this->startTimeHour;
+    }
+
+    public function getEndTimeHour(){
+        return $this->endTimeHour;
+    }
+
     public function setStartTimePercentage($percent){
         $this->startTimePercentage = $percent;
     }
@@ -147,6 +157,10 @@ class Event
     public function getStartTimeUnix(){
         return $this->startTimeUnix;
     }
+    public function getEndTimeUnix(){
+        return $this->endTimeUnix;
+    }
+
 
     private function extractCourse()
     {
@@ -163,12 +177,13 @@ class Event
         return $summaryFirstLine;
     }
 
-    private function extractLocation()
-    {
+    private function extractLocation(){
         $regex = "/Sal: (.+?)\\\\,*/";
-        preg_match($regex, $this->summary, $matches);
+        preg_match_all($regex, $this->summary, $matches);
         $this->summary = preg_replace($regex,"",$this->summary);
-        if (sizeof($matches) > 1) return $matches[1];
+        $matchesLoc = $matches[1];
+        if (sizeof($matchesLoc) > 2) $this->multipleLocations = true;
+        if (sizeof($matchesLoc) > 0) return $matchesLoc[0];
         else return "";
     }
 

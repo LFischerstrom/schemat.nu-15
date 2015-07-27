@@ -1,8 +1,3 @@
-<?php
-// header();
-
-?>
-
 <html>
 <head>
     <title>Schemat.nu</title>
@@ -171,6 +166,6 @@
         Schemat.nu är ej en produkt från Linköpings universitet. Frågor, synpunkter och felrapporter lämnas till henha972@<span class="displaynone">null</span>student.liu.se</p>.
 </div>
 
-
+<script>$("body").show()</script>
 </body>
 </html>

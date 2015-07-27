@@ -2,24 +2,26 @@
 
 class Day {
 
-    const START_TIME = 8;
-    const END_TIME = 18;
     const DAY_HEADER_HEIGHT = 20;
 
     private $date;
     private $dateString;
     private $events;
+    private $startTime;
+    private $endTime;
 
-    public function __construct($date, $allEvents){
+    public function __construct($date, $allEvents, $startTime, $endTime){
         $this->date = $date;
         $this->dateString = $date->format('Y-m-d');
+        $this->startTime = $startTime;
+        $this->endTime = $endTime;
         $this->events = $this->getEventsOnDate($allEvents);
         $this->addPercentageValuesToDayEvents($this->events);
     }
 
-    // TODO: Fix to real today.
     public function isToday(){
-        if ($this->dateString == "2015-08-19" ) return true;
+        $today = Date("Y-m-d");
+        if ($this->dateString == $today) return true;
         return false;
     }
 
@@ -55,8 +57,8 @@ class Day {
     private function addPercentageValuesToDayEvents($events)
     {
         foreach ($events as $event) {
-            $event->setStartTimePercentage(($event->getStartTime() - self::START_TIME) / (self::END_TIME - self::START_TIME) * 100);
-            $event->setHeightPercentage(($event->getEndTime() - $event->getStartTime()) / (self::END_TIME - self::START_TIME) * 100);
+            $event->setStartTimePercentage(($event->getStartTime() - $this->startTime) / ($this->endTime - $this->startTime) * 100);
+            $event->setHeightPercentage(($event->getEndTime() - $event->getStartTime()) / ($this->endTime - $this->startTime) * 100);
         }
     }
 
