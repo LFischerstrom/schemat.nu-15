@@ -14,6 +14,18 @@ class MyLog {
     }
 
     public function readBackwards($limit){
+        $input = file(self::LOG_FILE);
+        $rev_input = array_reverse($input);
+        $text = "";
+        $counter = 0;
+        foreach ($rev_input as $line) {
+            $text .= trim($line) . '<br>';
+            $counter++;
+            if ($counter >= $limit) return $text;
+        }
+        return $text;
+
+/*
         $handle = fopen(self::LOG_FILE, "r");
         $backwardsText = "";
         $counter = 0;
@@ -26,7 +38,8 @@ class MyLog {
         } else {
             // error opening the file.
         }
-     return $backwardsText;
+*/
+        //return $backwardsText;
     }
 
 }

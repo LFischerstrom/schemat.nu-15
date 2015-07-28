@@ -89,12 +89,12 @@ class ScheduleDownloader{
 
             $timeeditUrl = $this->makeTimeeditUrl($timeeditCode, $type);
             $this->downloadSchedule($id, $timeeditUrl);
-            $fileSize = round(filesize("schedules/". $id . ".txt")/1000,1);
+            $fileSize = round(filesize("schedules/". str_replace("*","@",$id) . ".txt")/1000,1);
 
             if ($fileSize == 0) $this->log->write("ERROR: Downloading " . $id . " | ". $timeeditUrl . " | " . $timeeditCode ."\n");
             else $this->log->write("Downloaded: " . $id . " | " . $fileSize  . " Kb \n");
 
-            print nl2br($this->log->readBackwards(100));
+            print nl2br($this->log->readBackwards(50));
 
             $downloadedSchedules++;
         }

@@ -6,7 +6,6 @@ $numberOfIds = getNumberOfIds();
 $lastOffsetFile = 'lastOffset.txt';
 $lastDownloadedOffset = file_get_contents($lastOffsetFile);
 $sd = new ScheduleDownloader();
-$nextOffset = 0;
 
 
 
@@ -25,7 +24,7 @@ if ($offset <= $numberOfIds){
     $nextOffset = $offset + $amount;
 }
 
-if ($nextOffset > $numberOfIds){
+if ($offset > $numberOfIds){
     if ($amount != 1){
         $amount = ceil($amount/2);
         $nextOffset = $offset + $amount;
@@ -33,7 +32,7 @@ if ($nextOffset > $numberOfIds){
     // All schedules downloaded.
     else {
         $amount = 0;
-        print "<br />DONE!";
+        print "DONE!";
     }
 }
 
