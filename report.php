@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Schemat.nu</title>
-
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <link rel="stylesheet" type="text/css" href="css/colors.css" />

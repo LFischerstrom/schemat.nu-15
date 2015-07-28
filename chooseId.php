@@ -1,14 +1,16 @@
 <html>
 <head>
-    <title>Schemat.nu</title>
-
+    <title>Schemat - LiU - Linköpings universitet</title>
+    <meta name="description" content="Schemat.nu visar LiU's schema - schemat vid Linköpings universitet. Bättre tillgänglighet och förenklad läsbarhet.">
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <link rel="stylesheet" type="text/css" href="css/colors.css" />
     <link rel="stylesheet" type="text/css" href="css/chooseIdPage.css" />
+    <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
     <script src="javascript/list.js"></script>
-    <script src="javascript/studentGroupList.js"></script>
+    <script src="javascript/groups.js"></script>
+    <script src="javascript/courses.js"></script>
     <script src="//cdn.jsdelivr.net/jquery.scrollto/2.1.0/jquery.scrollTo.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -19,11 +21,38 @@
         var li;
         var lastVisible
         var userList;
+        var clickedMenu = null;
 
         $(document).ready(function(){
+            var clickedMoreInfo = null;
+
             prepareList();
             updateListVisibility();
             setupEnterPress();
+            setupMenu();
+
+            function setupMenu(){
+                var menu = $("#popupMenu");
+
+                $(".button").click(function(){
+                    if (clickedMenu == null) clickedMenu = menu;
+                });
+
+
+                $(document).click(function(){
+                    if (clickedMenu != null){
+                        menu.toggle();
+                        if (clickedMoreInfo != null){
+                            clickedMoreInfo.hide();
+                            clickedMoreInfo = null;
+                        }
+                        if ( menu.css("display") == "none"){
+                            clickedMenu = null;
+                        }
+                    }
+                });
+            }
+
         });
 
 
@@ -44,6 +73,10 @@
                 }
             });
         }
+
+
+
+
 
 
         function updateSelection(e){
@@ -85,13 +118,18 @@
             });
         }
 
+
         function prepareList() {
-            // values is added from studentGroupList.js
             var options = {
-                valueNames: [ 'id', 'desc' ]
+                // valueNames: [ 'id', 'desc' ]
+                valueNames: ['id']
             };
             userList = new List('classSearch', options);
-            userList.add(values);
+
+            // Adding values from javascript/courses & groups
+            userList.add(groups);
+            userList.add(courses);
+
             userList.sort('id', { order: "asc" }); // Sorts the list in abc-order based on names
         }
 
@@ -120,15 +158,21 @@
         }
 
 
-
     </script>
 </head>
 <body>
+
+<div id="popupMenu">
+    <ul id="menu">
+        <li class="option"><a href="report.php">Rapportera fel</a></li>
+    </ul>
+</div>
+
 <header>
     <div id="row">
-       <!-- <div id="left"><h1></h1></div> -->
+         <div id="left"><h1></h1></div>
         <div id="middle"><h1 id="currentWeekNumber">Schemat.nu</h1></div>
-        <!-- <div id="right"><a href="#"><img src="images/settings-white.png" class="button" alt=""/></a>  </div>-->
+        <div id="right"><a href="#"><img src="images/settings-white.png" class="button" alt=""/></a>  </div>
     </div>
 </header>
 
@@ -136,9 +180,7 @@
 
 
 <div id="classSearch">
-
-    <input class="search" placeholder="Ange klass (t.ex. IT1)" autofocus />
-
+    <input class="search" placeholder="Sök klass eller kurskod" autofocus />
     <ul class="list">
         <li>
             <a href="#" class="link">
@@ -149,23 +191,21 @@
             </a>
         </li>
     </ul>
-
-    <p>Detta behöver endast anges en gång per enhet.</p>
-
 </div>
 
 <div class="top">
     <ul>
         <li>Visar schemat nu, inget tjafs.</li>
-        <li>Tokbra mobilanpassning.</li>
-        <li>Stödjer både klasser, kurser och personliga scheman.</li>
+        <li>Kommer ihåg ditt schemaval.</li>
+        <li>Stödjer både klasser och kurser.</li>
+        <li>Stabil mobilanpassning.</li>
     </ul>
 </div>
-<div class="bottom">
-    <p>Syftet med Schemat.nu är att förbättra tillgängligheten och förenkla läsbarheten av främst LiU-studenters schema.
-        Schemat.nu är ej en produkt från Linköpings universitet. Frågor, synpunkter och felrapporter lämnas till henha972@<span class="displaynone">null</span>student.liu.se</p>.
-</div>
 
-<script>$("body").show()</script>
+<script>
+    $("body").show();
+    $(".list").show();
+
+</script>
 </body>
 </html>

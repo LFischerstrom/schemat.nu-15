@@ -22,3 +22,7 @@ header, .today, #menu{
     background-color: #2b81af ;
     color: #ffffff;
 }
+
+a:active, a:visited, a:hover, a:link{
+    color: #222222;
+}

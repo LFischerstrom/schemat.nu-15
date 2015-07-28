@@ -43,7 +43,6 @@ $schedule = new Schedule($id);
             var initCellBgColor= $(".cell:first").css("background-color");
             var clickedMoreInfo = null;
             var clickedMenu = null;
-            var menu = $("#popupMenu");
 
             setWeeknumberHeader();
             fixOverlappingEvents();
@@ -51,7 +50,7 @@ $schedule = new Schedule($id);
             fixResponsiveDays();
             removePartlyHiddenTextLinesInRest();
             setupMoreInfoBox();
-
+            setupMenu();
 
 
             $(window).on('resize', function(){
@@ -82,27 +81,28 @@ $schedule = new Schedule($id);
             });
 
 
+            function setupMenu(){
+                var menu = $("#popupMenu");
 
+                $(".button").click(function(){
+                    if (clickedMenu == null) clickedMenu = menu;
+                });
 
-            $(".button").click(function(){
-                if (clickedMenu == null) clickedMenu = menu;
-            });
-
-            // Menu
-            $(document).click(function(){
-                if (clickedMenu != null){
-                    menu.toggle();
-                    if (clickedMoreInfo != null){
-                        clickedMoreInfo.hide();
-                        clickedMoreInfo = null;
+                $(document).click(function(){
+                    if (clickedMenu != null){
+                        menu.toggle();
+                        if (clickedMoreInfo != null){
+                            clickedMoreInfo.hide();
+                            clickedMoreInfo = null;
+                        }
+                        dimScreen(true);
+                        if ( menu.css("display") == "none"){
+                            dimScreen(false);
+                            clickedMenu = null;
+                        }
                     }
-                    dimScreen(true);
-                    if ( menu.css("display") == "none"){
-                        dimScreen(false);
-                        clickedMenu = null;
-                    }
-                }
-            });
+                });
+            }
 
             function setWeeknumberHeader(){
 
@@ -304,7 +304,6 @@ $schedule = new Schedule($id);
     <?php $schedule->printSchedule(); ?>
 </div>
 
-<div id="loading"></div>
 
 <script>
     $('#fullpage').fullpage({
@@ -312,7 +311,6 @@ $schedule = new Schedule($id);
     menu: '#menu'
     });
 
-    $("#loading").hide();
     $("#fullpage").show();
 
 </script>

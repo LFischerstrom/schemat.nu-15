@@ -53,11 +53,6 @@
     display: table-cell;
 }
 
-
-a:active, a:visited, a:hover, a:link{
-    color: #000000;
-}
-
 .event .shadow{
     position: absolute;
     width: 100%;

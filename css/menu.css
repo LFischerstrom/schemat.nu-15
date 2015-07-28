@@ -15,13 +15,13 @@
     background:#666;
     background: rgba(0,0,0, 0.5);
 }
-#menu li a{
+#popupMenu li a{
     text-decoration:none;
 }
-#menu li.active a:hover{
+#popupMenu li.active a:hover{
     color: #000;
 }
-#menu li:hover{
+#popupMenu li:hover{
     background: rgba(255,255,255, 0.8);
 }
 #menu li a,
@@ -47,3 +47,5 @@
 #popupMenu{
     display: none;
 }
+
+
