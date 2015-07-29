@@ -318,5 +318,5 @@ $schedule = new Schedule($id);
 
 <?php // STATS
 $st = new Stats();
-$st->captureStats();
+$st->captureStats($id);
 ?>

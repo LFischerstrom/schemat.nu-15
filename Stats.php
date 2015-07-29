@@ -1,54 +1,144 @@
 <?php
 include("connect.php");
+
 new Stats();
 
-class Stats{
+class Stats
+{
 
     private $allClasses;
 
-    public function __construct(){
-        if (basename($_SERVER['PHP_SELF']) == "Stats.php") $this->printStatsPage();
+    public function __construct()
+    {
+        //if (basename($_SERVER['PHP_SELF']) == "Stats.php")
+        print $this->getStatsPage();
     }
 
-    public function captureStats(){
-        $currentClass = htmlspecialchars($id = $_COOKIE['SchematId']);
+    public function captureStats($id)
+    {
+        $id = htmlspecialchars($id);
         $ip = htmlspecialchars($_SERVER['REMOTE_ADDR']);
-        $sql = "INSERT INTO stats (id, ip, class,timestamp) VALUES (id, '$ip','$currentClass',CURRENT_TIMESTAMP)";
+        $sql = "INSERT INTO stats (id, ip, class,timestamp) VALUES (id, '$ip','$id',CURRENT_TIMESTAMP)";
         $sql = mysql_query($sql);
     }
 
-    // $unique: boolean
-    // $specificClass = false or "class", "IT3" etc.
-    public function getVisits($unique, $specificClass, $startDate, $endDate){
-        if ($unique == true) $unique = "DISTINCT";
-        else $unique = "";
-        if ($specificClass == false) $specificClass = "";
-        else $specificClass = "AND class='$specificClass'";
-        $sql = "SELECT $unique ip FROM stats WHERE  `timestamp` >= '$startDate' AND `timestamp` <  '$endDate' + INTERVAL 1 DAY $specificClass ORDER BY class";
-        $query = mysql_query($sql);
-        $visits = mysql_num_rows($query);
-        return $visits;
+    public function getStatsPage(){
+        $html = '<html>
+        <head>
+        <link rel="stylesheet" type="text/css" href="css/stats.css" />
+        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="javascript/tablesorter/jquery-latest.js"></script>
+        <script type="text/javascript" src="javascript/tablesorter/jquery.tablesorter.js"></script>
+
+        </head>
+        <body id="stats">
+        <table id="table" class="tablesorter"><thead>';
+
+        $html .= '<tr class="row">';
+        $html .= '<th class="cell"></th>';
+        $html .= '<th class="cell">Idag</th>';
+        $html .= '<th class="cell"></th>';
+        $html .= '<th class="cell">Igår</th>';
+        $html .= '<th class="cell"></th>';
+        $html .= '<th class="cell">Denna vecka</th>';
+        $html .= '<th class="cell"></th>';
+        $html .= '<th class="cell">Förra veckan</th>';
+        $html .= '<th class="cell"></th>';
+        $html .= '</tr>';
+
+        $html .= '<tr class="row">';
+        $html .= '<th class="cell">Ids</th>';
+        $html .= '<th class="cell">A</th>';
+        $html .= '<th class="cell">U</th>';
+        $html .= '<th class="cell">A</th>';
+        $html .= '<th class="cell">U</th>';
+        $html .= '<th class="cell">A</th>';
+        $html .= '<th class="cell">U</th>';
+        $html .= '<th class="cell">A</th>';
+        $html .= '<th class="cell">U</th>';
+        $html .= '</tr></thead><tbody>';
+
+        $todaysVisits = $this->getVisits($this->getTodaysDate(), $this->getTodaysDate());
+        $yesterDaysVisits = $this->getVisits($this->getYesterDaysDate(), $this->getYesterDaysDate());
+        $thisWeekVisits = $this->getVisits($this->getWeekStartDate(), $this->getTodaysDate());
+        $lastWeekVisits = $this->getVisits($this->getLastWeekStartDate(), $this->getLastWeekEndDate());
+
+        $allVisits = array_merge($thisWeekVisits,$lastWeekVisits);
+
+        foreach ($allVisits as $id => $ipArray){
+            $html .= '<tr class="row">';
+            $html .= '<td class="cell">' . $id . "</td>";
+            $html .= '<td class="cell">' . $this->getNumberOfVisits($todaysVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getUniqueNumberOfVisits($todaysVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getNumberOfVisits($yesterDaysVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getUniqueNumberOfVisits($yesterDaysVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getNumberOfVisits($thisWeekVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getUniqueNumberOfVisits($thisWeekVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getNumberOfVisits($lastWeekVisits,$id) . '</td>';
+            $html .= '<td class="cell">' . $this->getUniqueNumberOfVisits($lastWeekVisits,$id) . '</td>';
+            $html .= '</tr>';
+        }
+
+        $html .= '</tbody></table>
+
+
+         <script>
+
+        $(document).ready(function()
+         {
+        $("#table").tablesorter();
+
+
+         }
+);
+</script>
+
+</body></html>';
+        return $html;
     }
 
-    public function getAllClasses(){
-        $classArray = array();
-        $sql = "SELECT DISTINCT class FROM stats ORDER BY class";
-        $sql = mysql_query($sql) or die ("Error: Couldn't catch classes");
-        while ($resultat = mysql_fetch_array($sql))
-        {
-            $classArray[] = $resultat["class"];
+
+
+    private function getVisits($startDate, $endDate)
+    {
+        $sql = "SELECT ip,class FROM stats WHERE timestamp >= '$startDate' AND timestamp <  '$endDate' + INTERVAL 1 DAY ORDER BY class";
+        $result = mysql_query($sql);
+
+        $visits = array();
+        if ($result) {
+            while ($row = mysql_fetch_assoc($result)) {
+                $id = $row['class'];
+                $ip = $row['ip'];
+                if (!isset($visits[$id])) $visits[$id] = array();
+                if (!isset($visits[$id][$ip])) $visits[$id][$ip] = 1;
+                else $visits[$id][$ip]++;
+            }
+            return $visits;
         }
-        return $classArray;
+        else return "SQL ERROR.";
     }
 
-    public function getIndividualScheduleVisits($unique, $since){
-        if (!isset($this->allClasses)) $this->allClasses = $this->getAllClasses();
-        $allClasses = $this->allClasses;
-        foreach ($allClasses as $class) {
-            $individualVisits[] =  $this->getVisits($unique, $class, "MONTH", 8);
-        }
+    private function getUniqueNumberOfVisits($visits, $id){
+        if (isset($visits[$id])) return sizeof($visits[$id]);
+        else return "";
+    }
 
-        return $individualVisits;
+    private function getUniqueNumberOfVisitsIp($visits, $id){
+        $ipList = array();
+        if (!isset($visits[$id])) return $ipList;
+        foreach ($visits[$id] as $ip => $nrOfVisits) array_push($ipList,$ip);
+        return $ipList;
+    }
+
+    private function getNumberOfVisits($visits, $id){
+        $allVisits = 0;
+        if (!isset($visits[$id])) return "";
+        foreach ($visits[$id] as $ip => $nrOfVisits) $allVisits += $nrOfVisits;
+        return $allVisits;
+    }
+
+    private function prettyPrint($a) {
+        echo '<pre>'.print_r($a,1).'</pre>';
     }
 
     public function getTodaysDate(){
@@ -95,101 +185,4 @@ class Stats{
         return date("Y-12-31", strtotime("last day of previous year"));
     }
 
-    public function getStatsColumn($header1, $header2, $header3,
-                                   $fromDate1, $endDate1, $fromDate2, $endDate2){
-
-        if (!isset($this->allClasses)) $this->allClasses = $this->getAllClasses();
-
-        $content = "<div class='statsTable'>
-			<div class='line1'>$header1</div>
-			<div class='line2'>$header2</div>
-			<div class='line2'>$header3</div>
-			<div class=\"stats4columns\" style='border: 0px solid black;'>
-			<div>A</div><div>U</div><div>A</div><div>U</div>";
-        $allClasses = $this->allClasses;
-        foreach ($allClasses as $class) {
-            $content .= "
-			<div>".
-                $this->getVisits(false, $class, $fromDate1, $endDate1)
-                ."</div><div>".
-                $this->getVisits(true, $class, $fromDate1, $endDate1)
-                ."</div><div>".
-                $this->getVisits(false, $class, $fromDate2, $endDate2)
-                ."</div><div>".
-                $this->getVisits(true, $class, $fromDate2, $endDate2).
-                "</div>";
-        }
-
-        $content .= "<strong><div>".
-            $this->getVisits(false, false, $fromDate1, $endDate1)
-            ."</div><div>".
-            $this->getVisits(true, false, $fromDate1, $endDate1)
-            ."</div><div>".
-            $this->getVisits(false, false, $fromDate2, $endDate2)
-            ."</div><div>".
-            $this->getVisits(true, false, $fromDate2, $endDate2).
-            "</div></strong>";
-
-        $content .= "</div><br style=\"clear:both;\"></div>";
-        return $content;
-    }
-
-    public function getClassList(){
-        $content = "<div class='classTable'>
-		<div>&nbsp;</div>
-		<div>&nbsp;</div>
-		<div>Scheman</div>
-		";
-        if (!isset($this->allClasses)) $this->allClasses = $this->getAllClasses();
-        $allClasses = $this->allClasses;
-        foreach ($allClasses as $class) {
-            $content .= "<div>$class</div>";
-        }
-        $content .= "<div><strong>Totalt</strong></div></div>";
-        return $content;
-    }
-
-    public function updateStats(){
-
-        $allClasses = $this->allClasses;
-
-        $content = $this->getClassList();
-
-        $content .= $this->getStatsColumn("Dag","Idag","Igår", $this->getTodaysDate(), $this->getTodaysDate(),
-            $this->getYesterDaysDate(), $this->getYesterDaysDate());
-
-        $content .= $this->getStatsColumn("Vecka","Denna","Förra", $this->getWeekStartDate(), $this->getTodaysDate(),
-            $this->getLastWeekStartDate(), $this->getLastWeekEndDate());
-
-        $content .= $this->getStatsColumn("Månad","Denna","Förra", $this->getMonthStartDate(), $this->getTodaysDate(),
-            $this->getLastMonthStartDate(), $this->getLastMonthEndDate());
-
-        $content .= $this->getStatsColumn("År","Detta","Förra", $this->getYearStartDate(), $this->getTodaysDate(),
-            $this->getLastYearStartDate(), $this->getLastYearEndDate());
-
-        $this->writeTxtFile($content,"../stats/stats.txt");
-
-    }
-
-    public function writeTxtFile($content, $filePath) {
-        $fh = fopen($filePath, 'w') or die("can't open file");
-        fwrite($fh, $content);
-        fclose($fh);
-    }
-
-    public function printStatsPage(){
-        echo '<html><head>
-    <link rel="stylesheet" type="text/css" href="css/stats.css" />
-
-</head><body>';
-        echo "<h1>Statistik</h1><p>Antal besökare(A) respektive unika besökare (U) på schemat.nu presenteras nedan.</p>";
-
-        echo file_get_contents("stats/stats.txt");
-        echo "</body></html>";
-    }
 }
-
-
-
-?>
-
