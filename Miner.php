@@ -8,8 +8,8 @@ class Miner
     const COURSES_FILE = "courses.html";
     const GROUPS_JSON = "groups.json";
     const COURSES_JSON = "courses.json";
-    const COURSES_JS = "../javascript/courses.js";
-    const GROUPS_JS = "../javascript/groups.js";
+    const COURSES_JS = "javascript/courses.js";
+    const GROUPS_JS = "javascript/groups.js";
 
     private function mine($file){
         $html = new simple_html_dom();
