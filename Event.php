@@ -21,12 +21,8 @@ class Event
     private $endTimeHour;
     private $endTimeMinutes;
     private $endTime;
-    private $location;
-    private $course;
     private $summary;
     private $allSummary;
-    private $multipleLocations;
-
 
     function __construct($icalEvent)
     {
@@ -52,8 +48,8 @@ class Event
         $this->endTime = $this->endTimeHour + $endTimeMinutesInHourFormat;
 
         $this->allSummary = $this->summary = $this->icalEvent['SUMMARY'];
-        $this->location = $this->extractLocation();
-        $this->course = $this->extractCourse();
+        $this->locations = $this->extractMarkups("Sal: ");
+        $this->courses = $this->extractMarkups("Kurs: ");
     }
 
     public function getHtml(){
@@ -101,18 +97,27 @@ class Event
 
     private function getLocationDiv(){
         $html = '<div class="location">';
-        $html .= $this->location;
-        if ($this->multipleLocations) $html .= "...";
+
+        if (sizeof($this->locations)>0){
+            $html .= $this->locations[0];
+            if (sizeof($this->locations)>1) $html .= "...";
+        }
+
         $html .= '</div>';
         return $html;
     }
 
     private function getCourseDiv(){
         $html = '<div class="course">';
+
         // only make course div if there is a course. If not make space for rest line.
-        if ($this->course != "") $html .= $this->course;
+        if (sizeof($this->courses)>0){
+            $html .= $this->courses[0];
+            if (sizeof($this->courses)>1) $html .= "...";
+        }
         // take first line from rest and put in course div
         else $html .= $this->extractNextLineFromSummary();
+
         $html .= '</div>';
         return $html;
     }
@@ -123,6 +128,40 @@ class Event
         $style .= "height:" . $this->heightPercentage . "%;";
         return $style;
     }
+
+    private function extractNextLineFromSummary(){
+        $summaryFirstLine = strtok($this->summary, "\\,");
+        $this->summary = preg_replace('/^.+\,/', '', $this->summary);
+        return $summaryFirstLine;
+    }
+
+    private function extractMarkups($markup){
+        $regex = "/" . $markup . "(.+?)(\\\\,|$)+/";
+        preg_match_all($regex, $this->summary, $matches);
+        $this->summary = preg_replace($regex,"",$this->summary);
+        return $matches[1];
+    }
+
+    private function dateToMdString($date){
+        $day = (int)$date->format('d');
+        $month = (int)$date->format('m');
+        $dateString = $day.'/'.$month;
+        return $dateString;
+    }
+
+    private function getDayName($i){
+        $dayNames = array(
+            0=>'Mån',
+            1=>'Tis',
+            2=>'Ons',
+            3=>'Tor',
+            4=>'Fre',
+            5=>'Lör',
+            6=>'Sön',
+        );
+        return $dayNames[($i - 1) % 7];
+    }
+
 
     public function getStartDateString(){
         return $this->startDateString;
@@ -159,50 +198,5 @@ class Event
         return $this->endTimeUnix;
     }
 
-
-    private function extractCourse()
-    {
-        $regex = "/Kurs: (.+?)\\\\,*/";
-        preg_match($regex, $this->summary, $matches);
-        $this->summary = preg_replace($regex,"",$this->summary);
-        if (sizeof($matches) > 1) return $matches[1];
-        else return "";
-    }
-
-    private function extractNextLineFromSummary(){
-        $summaryFirstLine = strtok($this->summary, "\\,");
-        $this->summary = preg_replace('/^.+\,/', '', $this->summary);
-        return $summaryFirstLine;
-    }
-
-    private function extractLocation(){
-        $regex = "/Sal: (.+?)(\\\\,|$)+/";
-        preg_match_all($regex, $this->summary, $matches);
-        $this->summary = preg_replace($regex,"",$this->summary);
-        $matchesLoc = $matches[1];
-        if (sizeof($matchesLoc) > 1) $this->multipleLocations = true;
-        if (sizeof($matchesLoc) > 0) return $matchesLoc[0];
-        else return "";
-    }
-
-    private function dateToMdString($date){
-        $day = (int)$date->format('d');
-        $month = (int)$date->format('m');
-        $dateString = $day.'/'.$month;
-        return $dateString;
-    }
-
-    private function getDayName($i){
-        $dayNames = array(
-            0=>'Mån',
-            1=>'Tis',
-            2=>'Ons',
-            3=>'Tor',
-            4=>'Fre',
-            5=>'Lör',
-            6=>'Sön',
-        );
-        return $dayNames[($i - 1) % 7];
-    }
 
 }

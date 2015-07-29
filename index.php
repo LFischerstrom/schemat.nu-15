@@ -36,8 +36,6 @@ $schedule = new Schedule($id);
     <script>
 
         $(document).ready(function(){
-
-
             var initEventBgColor= $(".event:first").css("background-color");
             var initCellBgColor= $(".cell:first").css("background-color");
             var clickedMoreInfo = null;
@@ -50,7 +48,6 @@ $schedule = new Schedule($id);
             removePartlyHiddenTextLinesInRest();
             setupMoreInfoBox();
             setupMenu();
-
 
             $(window).on('resize', function(){
                 fixTableHeight();
@@ -103,13 +100,11 @@ $schedule = new Schedule($id);
                 });
             }
 
+            // sets the week number header
             function setWeeknumberHeader(){
-
-                // sets the week number header
                 var hash = window.location.hash;
                 var weekNumber = hash.match(/\d+/);
                 if (weekNumber != null) $('#currentWeekNumber').text('v ' + weekNumber);
-
             }
 
             // Fixing overlapping events:
@@ -310,12 +305,11 @@ $schedule = new Schedule($id);
 
 <script>
     $('#fullpage').fullpage({
-    <?php print $schedule->getSectionAnchors(); ?>
-    menu: '#menu'
+        <?php print $schedule->getSectionAnchors(); ?>
+        menu: '#menu'
     });
 
     $("#fullpage").show();
-
 </script>
 
 </body>

@@ -8,8 +8,8 @@ require_once('ics-parser/class.iCalReader.php');
 
 class Schedule {
 
-    private $id;
-    private $icsFilePath;
+    const ICS_FILE_DIRECTORY = "schedules/";
+
     private $events;
     private $startWeek;
     private $endWeek;
@@ -19,13 +19,11 @@ class Schedule {
     private $error = false;
 
     function __construct($id){
-        $this->id = $id;
-        $sd = new ScheduleDownloader();
-        $this->icsFilePath = $sd->getFilePath($this->id);
+
         // for testing
         //$this->icsFilePath = "ics-parser/MyCal.ics";
 
-        $ical = new ICal($this->icsFilePath);
+        $ical = new ICal(self::ICS_FILE_DIRECTORY . $id . ".txt");
         $icalEvents = $ical->events();
         if (!isset($icalEvents) || $icalEvents == null || $icalEvents == "") {
             $this->error = true;
@@ -38,10 +36,7 @@ class Schedule {
             $this->startYear = $this->setStartYear($this->events);
             $this->endYear = $this->setEndYear($this->events);
         }
-
-
     }
-
 
     private function generateEvents($icalEvents){
         $events = array();
@@ -53,31 +48,23 @@ class Schedule {
 
     public function printSchedule()
     {
+        if ($this->error) print '<div id="error">' . $this->getErrorMessage() . "</div>";
+        $content = "";
+        $year = $this->startYear;
+        $numberOfWeeks = $this->getNumberOfWeeks();
+        $currentWeek = $this->startWeek;
 
-        if ($this->error) {
-            print '<div id="error">' . $this->getErrorMessage() . "</div>";
-        }
-
-            $content = "";
-            $year = $this->startYear;
-            $numberOfWeeks = $this->getNumberOfWeeks();
-            $currentWeek = $this->startWeek;
-
-            // Prints all weeks
-
-
-            for ($i = 0; $i < $numberOfWeeks; $i++) {
-                if ($currentWeek == 54) {
-                    $currentWeek = 1;
-                    $year++;
-                }
-                $week = new Week($this->events, $year, $currentWeek);
-                $content .= $week->getWeekContent();
-                $currentWeek++;
+        // Prints all weeks
+        for ($i = 0; $i < $numberOfWeeks; $i++) {
+            if ($currentWeek == 54) {
+                $currentWeek = 1;
+                $year++;
             }
-
-            print $content;
-
+            $week = new Week($this->events, $year, $currentWeek);
+            $content .= $week->getWeekContent();
+            $currentWeek++;
+        }
+        print $content;
     }
 
     public function getMenuListItems(){

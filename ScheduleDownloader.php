@@ -10,30 +10,29 @@ class ScheduleDownloader{
     const LOCATION_MARKUP_FILE = "locations.txt";
     const ID_FILE = "idList.txt";
 
+    // allIds is an array: Id => timeeditObjectCode
+    private $allIds;
     private $log;
 
     public function __construct(){
         $this->log = new MyLog();
+        $miner = new Miner();
+        $this->allIds = $miner->getGroupsAndCourses();
     }
 
     public function getFilePath($id){
         $id = str_replace("*","@",$id);
+        $directory = SELF::DEFAULT_FILE_PATH;
+        if (!file_exists($directory)) mkdir($directory, 0777, true);
         return self::DEFAULT_FILE_PATH . $id . ".txt";
     }
 
-    private function makeTimeeditUrl($object, $type){
+    private function getTimeeditUrl($id){
         $startdate = "20150101";
         $enddate = "20300501";
-        return "https://se.timeedit.net/web/liu/db1/schema/s/s.html?tab=3&object=".$object."&type=".$type."&startdate=".$startdate."&enddate=".$enddate;
-    }
-
-    private function isScheduleFound($url){
-        if (strpos(file_get_contents($url),"Schemat kunde inte skapas") !== false){
-            return false;
-        }
-        else{
-            return true;
-        }
+        $timeeditObjectCode = $this->allIds[$id];
+        $type = $this->getScheduleType($timeeditObjectCode);
+        return "https://se.timeedit.net/web/liu/db1/schema/s/s.html?tab=3&object=".$timeeditObjectCode."&type=".$type."&startdate=".$startdate."&enddate=".$enddate;
     }
 
     // Finding the ics link in iCalDialogContent-div, option 3.
@@ -56,18 +55,11 @@ class ScheduleDownloader{
     }
 
     private function saveIcsFile($icsUrl, $id){
-        if(contains($id,"*")) $id = str_replace("*","@", $id);
-        $newFile = $id.".txt";
-        $directory = SELF::DEFAULT_FILE_PATH;
-        if (!file_exists($directory)) mkdir($directory, 0777, true);
-
+        $filePath = $this->getFilePath($id);
         $icsContent = file_get_contents($icsUrl);
-
         $icsContent = $this->removeLinebreaksInIcsContent($icsContent);
         $icsContent = $this->makeLocationMarkups($icsContent);
-
-        file_put_contents($directory . $newFile, $icsContent);
-        $filePath = $directory .$newFile;
+        file_put_contents($filePath, $icsContent);;
         return $filePath;
     }
 
@@ -82,46 +74,37 @@ class ScheduleDownloader{
                 $line = substr($line, 1);
                 if (isset($newStr[$i-1])) $newStr[$i-1].= $line;
                 else $newStr[$i-1] = $line;
-            } else {
-                $newStr[$i] = $line;
             }
-
+            else $newStr[$i] = $line;
         }
         $icsContent = implode(PHP_EOL, $newStr);
         return $icsContent;
     }
 
     public function downloadSchedules($offset, $amount){
-
-        $miner = new Miner();
-        $allIds = $miner->getGroupsAndCourses();
         $counter = 0;
         $downloadedSchedules = 0;
 
-        foreach ($allIds as $id => $timeeditCode) {
+        foreach ($this->allIds as $id => $objectType) {
             if($counter++ < $offset) continue;
             if($downloadedSchedules >= $amount) return;
+            $this->downloadSchedule($id);
 
-            if (contains($timeeditCode,"*")) $type = "studentgroup";
-            else if (contains($timeeditCode,"_")) $type = "subgroup";
-            else if (contains($timeeditCode,"CM_")) $type = "courseevt";
-            else $type = "studentgroup";
-
-            $timeeditUrl = $this->makeTimeeditUrl($timeeditCode, $type);
-            $this->downloadSchedule($id, $timeeditUrl);
-            $fileSize = round(filesize("schedules/". str_replace("*","@",$id) . ".txt")/1000,1);
-
-            if ($fileSize == 0) $this->log->write("ERROR: Downloading " . $id . " | ". $timeeditUrl . " | " . $timeeditCode ."\n");
+            // Error handling
+            $fileSize = round(filesize($this->getFilePath($id))/1000,1);
+            if ($fileSize == 0) $this->log->write("ERROR: Downloading " . $id . " | ". $this->getTimeeditUrl($id) . "\n");
             else $this->log->write("Downloaded: " . $id . " | " . $fileSize  . " Kb \n");
 
+            // print log
             print nl2br($this->log->readBackwards(50));
 
             $downloadedSchedules++;
         }
     }
 
-    public function downloadSchedule($id, $timeeditCode){
-        $icsLink = $this->findIcsLink($timeeditCode);
+    public function downloadSchedule($id){
+        $timeeditUrl = $this->getTimeeditUrl($id);
+        $icsLink = $this->findIcsLink($timeeditUrl);
         $icsFilePath = $this->saveIcsFile($icsLink, $id);
         return $icsFilePath;
     }
@@ -135,10 +118,25 @@ class ScheduleDownloader{
         $icsContent = preg_replace_callback($regex,"callback",$icsContent);
         return $icsContent;
     }
+
+
+    //      --TYPE--                  --OBJECT--
+    // 1.  studentgroup/subgroup      Group_IT1
+    // 2.  subgroup                   Sub_Group_EMM2_EMM2.a
+    // 3.  studentgroup               CourseGroup_ÄGY3
+    // 4.  studentgroup               CourseGroup_711626.*
+    // 5.  subgroup                   CourseSub_CourseGroup_711626.*_711626.01
+    // 6.  courseevt                  CM_TAOP86_1534_1544_DAG_NML_100_Valla_1_1
+    private function getScheduleType($timeeditCode){
+        if (contains($timeeditCode,"*")) $type = "studentgroup";
+        else if (contains($timeeditCode,"_")) $type = "subgroup";
+        else if (contains($timeeditCode,"CM_")) $type = "courseevt";
+        else $type = "studentgroup";
+        return $type;
+    }
 }
 
-
-function callback ($match) {
+function callback($match) {
     $colon = "";
     if (substr($match[0],0,1) == ':'){
         $colon = ": ";
@@ -147,12 +145,7 @@ function callback ($match) {
     return $colon . "Sal: " . preg_replace('/(\s+)+/', '', $match[0]);
 }
 
-
 function contains($string, $find){
     if (strpos($string,$find) !== false) return true;
     else return false;
 }
-
-$s = new ScheduleDownloader();
-$s->downloadSchedule("IT1", "https://se.timeedit.net/web/liu/db1/schema/ri157XQQ799Z50Qv87080gZ6y5Y7555Q6Y90Y7.html");
-//$s->downloadSchedule("KB1", "https://se.timeedit.net/web/liu/db1/schema/ri157XQQ799Z50Qv37070gZ6y5Y7552Q6Y90Y7.html");
