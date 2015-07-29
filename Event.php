@@ -70,8 +70,6 @@ class Event
 
         $html .= $this->getRestDiv();
 
-
-
         $html .= '<div class="shadow"></div>' . "\r\n";
 
         // More info div
@@ -178,11 +176,11 @@ class Event
     }
 
     private function extractLocation(){
-        $regex = "/Sal: (.+?)\\\\,*/";
+        $regex = "/Sal: (.+?)(\\\\,|$)+/";
         preg_match_all($regex, $this->summary, $matches);
         $this->summary = preg_replace($regex,"",$this->summary);
         $matchesLoc = $matches[1];
-        if (sizeof($matchesLoc) > 2) $this->multipleLocations = true;
+        if (sizeof($matchesLoc) > 1) $this->multipleLocations = true;
         if (sizeof($matchesLoc) > 0) return $matchesLoc[0];
         else return "";
     }

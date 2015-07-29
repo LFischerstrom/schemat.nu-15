@@ -2,6 +2,7 @@
 require_once('MyLog.php');
 require_once("Miner.php");
 
+
 class ScheduleDownloader{
 
     const DEFAULT_FILE_PATH = "schedules/";
@@ -55,15 +56,14 @@ class ScheduleDownloader{
     }
 
     private function saveIcsFile($icsUrl, $id){
-
         if(contains($id,"*")) $id = str_replace("*","@", $id);
         $newFile = $id.".txt";
         $directory = SELF::DEFAULT_FILE_PATH;
-        $icsContent = file_get_contents($icsUrl);
-        if (!file_exists($directory)) {
-            mkdir($directory, 0777, true);
-        }
+        if (!file_exists($directory)) mkdir($directory, 0777, true);
 
+        $icsContent = file_get_contents($icsUrl);
+
+        $icsContent = $this->removeLinebreaksInIcsContent($icsContent);
         $icsContent = $this->makeLocationMarkups($icsContent);
 
         file_put_contents($directory . $newFile, $icsContent);
@@ -71,7 +71,27 @@ class ScheduleDownloader{
         return $filePath;
     }
 
-    function downloadSchedules($offset, $amount){
+    // removes unwantad linebreaks in data, summary etc.
+    private function removeLinebreaksInIcsContent($icsContent){
+        $newStr = [];
+        $i = 0;
+        foreach(preg_split("/((\r?\n)|(\r\n?))/", $icsContent) as $line) {
+            $i++;
+
+            if ($line != null && $line[0] == chr(32)) {
+                $line = substr($line, 1);
+                if (isset($newStr[$i-1])) $newStr[$i-1].= $line;
+                else $newStr[$i-1] = $line;
+            } else {
+                $newStr[$i] = $line;
+            }
+
+        }
+        $icsContent = implode(PHP_EOL, $newStr);
+        return $icsContent;
+    }
+
+    public function downloadSchedules($offset, $amount){
 
         $miner = new Miner();
         $allIds = $miner->getGroupsAndCourses();
@@ -110,7 +130,7 @@ class ScheduleDownloader{
     public function makeLocationMarkups($icsContent){
         $locations = file_get_contents(self::LOCATION_MARKUP_FILE);
         $regex = "#(";
-        $regex .= preg_replace("/\r\n|\n|\r/","| ",$locations);
+        $regex .= preg_replace("/\r\n|\n|\r/" , "\\\\\\\\". "|( |:)",$locations);
         $regex .= ")#";
         $icsContent = preg_replace_callback($regex,"callback",$icsContent);
         return $icsContent;
@@ -118,12 +138,21 @@ class ScheduleDownloader{
 }
 
 
+function callback ($match) {
+    $colon = "";
+    if (substr($match[0],0,1) == ':'){
+        $colon = ": ";
+        $match[0][0] = "";
+    }
+    return $colon . "Sal: " . preg_replace('/(\s+)+/', '', $match[0]);
+}
+
 
 function contains($string, $find){
     if (strpos($string,$find) !== false) return true;
     else return false;
 }
 
-function callback ($match) {
-    return "Sal: " . $match[0];
-}
+$s = new ScheduleDownloader();
+$s->downloadSchedule("IT1", "https://se.timeedit.net/web/liu/db1/schema/ri157XQQ799Z50Qv87080gZ6y5Y7555Q6Y90Y7.html");
+//$s->downloadSchedule("KB1", "https://se.timeedit.net/web/liu/db1/schema/ri157XQQ799Z50Qv37070gZ6y5Y7552Q6Y90Y7.html");

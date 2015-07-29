@@ -1,5 +1,4 @@
 <?php
-require_once('ScheduleDownloader.php');
 require_once('Schedule.php');
 include_once('Stats.php');
 
@@ -249,6 +248,10 @@ $schedule = new Schedule($id);
                     // removes end time if box is too small
                     if ($(this).width() < 80) $(this).find(".end").css("display","none");
                     else $(this).find(".end").css("display","inline");
+
+                    // removes location box if no location
+                    var locationBox = $(this).find(".location");
+                    if (locationBox.text() == "") locationBox.hide();
 
                     // hide course box if overflowing and moving course text to rest div.
                     $(this).find(".course").css("display","inline");
