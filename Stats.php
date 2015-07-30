@@ -10,7 +10,7 @@ class Stats
 
     public function __construct()
     {
-        //if (basename($_SERVER['PHP_SELF']) == "Stats.php")
+        if (basename($_SERVER['PHP_SELF']) == "Stats.php")
         print $this->getStatsPage();
     }
 
