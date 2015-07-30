@@ -60,8 +60,6 @@ class Week {
             else $todayClass = "";
             $daysContent .= '<div class="weekdayHeader '.$todayClass.'">' . $this->getDayHeader($i).'</div>';
             $daysContent .= '<div class="weekdayContent">';
-
-            '.$todayClass.';
             $daysContent .= $day->getDayHtml();
             $daysContent .= '</div></div>';
             $date = $date->modify('+1 days');

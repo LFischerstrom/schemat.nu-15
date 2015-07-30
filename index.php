@@ -3,16 +3,13 @@ require_once('Schedule.php');
 include_once('Stats.php');
 
 // if no cookie -> choose id;
-if(!isset($_COOKIE['SchematId'])) {
-    if($_SERVER["HTTP_HOST"] == "localhost") header('Location: '."/Schemat.nu-15/chooseId.php");
-    else header('Location: '."/chooseId.php");
-}
+if(!isset($_COOKIE['SchematId'])) header('Location: ' ."chooseId.php");
+
 // else continue display page with schedule:
-
 $id = $_COOKIE['SchematId'];
-
-// Printing schedule
 $schedule = new Schedule($id);
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,8 +31,12 @@ $schedule = new Schedule($id);
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script>
-
+        Date.prototype.getWeek = function() {
+            var onejan = new Date(this.getFullYear(),0,1);
+            return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+        }
         $(document).ready(function(){
+
             var initEventBgColor= $(".event:first").css("background-color");
             var initCellBgColor= $(".cell:first").css("background-color");
             var clickedMoreInfo = null;
@@ -48,6 +49,7 @@ $schedule = new Schedule($id);
             removePartlyHiddenTextLinesInRest();
             setupMoreInfoBox();
             setupMenu();
+            setStartSlide();
 
             $(window).on('resize', function(){
                 fixTableHeight();
@@ -57,9 +59,7 @@ $schedule = new Schedule($id);
 
             // updates the week number header when changed week
             $(window).on('hashchange', function(e){
-                var hash = window.location.hash;
-                var weekNumber = hash.match(/\d+/);
-                if (weekNumber != null) $('#currentWeekNumber').text('v ' + weekNumber);
+                setWeeknumberHeader();
             });
 
             // dimming screen on click
@@ -75,6 +75,30 @@ $schedule = new Schedule($id);
                     }
                 }
             });
+
+            function setStartSlide(){
+                //0=Sun, 1=Mon, ..., 6=Sat
+                var today = new Date().getDay();
+                var numberOfDays = $('.cell', $($(".section").first())).length;
+                var daysToShow = Math.ceil(numberOfDays/2);
+
+                // Auto slide to second slide if:
+                // 1. Todays day is not visible on first slide.
+                // 2. Url typed is root (schemat.nu) or /#week[currentweek]-[currentyear]
+                // 3. The first shown week is the actuall current week.
+                if (today + 1 > daysToShow){
+                    var firstWeek = $(".section:first").attr("data-anchor");
+                    var url = $(location).attr('href');
+                    var index = url.lastIndexOf("/") + 2;
+                    url = url.substr(index);
+                    if (url == "" || firstWeek == url ){
+                        var currentWeek = new Date().getWeek();
+                        var weekNr = firstWeek.substring(4,6);
+                        if (weekNr == currentWeek) $.fn.fullpage.moveSlideLeft();
+                    }
+                }
+            }
+
 
 
             function setupMenu(){
@@ -299,7 +323,9 @@ $schedule = new Schedule($id);
 </header>
 
 <div id="fullpage">
-    <?php $schedule->printSchedule(); ?>
+    <?php
+    $schedule->printSchedule();
+    ?>
 </div>
 
 
@@ -310,6 +336,7 @@ $schedule = new Schedule($id);
     });
 
     $("#fullpage").show();
+
 </script>
 
 </body>

@@ -11,6 +11,8 @@ class Schedule {
     const ICS_FILE_DIRECTORY = "schedules/";
 
     private $events;
+    private $firstEventStartTimeUnix;
+    private $lastEventEndTimeUnix;
     private $startWeek;
     private $endWeek;
     private $startYear;
@@ -31,10 +33,14 @@ class Schedule {
         }
         else {
             $this->events = $this->generateEvents($icalEvents);
-            $this->startWeek = $this->setStartWeek($this->events);
-            $this->endWeek = $this->setEndWeek($this->events);
-            $this->startYear = $this->setStartYear($this->events);
-            $this->endYear = $this->setEndYear($this->events);
+
+            $this->firstEventStartTimeUnix = $this->getEventTimeExtremeValue($this->events,"min");
+            $this->lastEventEndTimeUnix = $this->getEventTimeExtremeValue($this->events,"max");
+
+            $this->setStartWeek();
+            $this->setStartYear();
+            $this->endWeek = $this->getWeek($this->lastEventEndTimeUnix);
+            $this->endYear = $this->getYear($this->lastEventEndTimeUnix);
         }
     }
 
@@ -102,36 +108,28 @@ class Schedule {
         return $anchorString;
     }
 
-    private function setScheduleTimeLimits($allEvents, $isStart, $idateSymbol){
-        if($isStart) $token = "DTSTART";
-        else $token = "DTEND";
+    private function getWeek($unix){
+        return idate("W", $unix);
+    }
+
+    private function getYear($unix){
+        return idate("Y",$unix);
+    }
+
+    private function getEventTimeExtremeValue($allEvents, $extremeValue){
+        if($extremeValue == "min") $token = "DTSTART";
+        else if ($extremeValue == "max") $token = "DTEND";
+        else return null;
         $wantedEventTime = null;
         foreach ($allEvents as $currentEvent) {
             $currentEventTime = iCalDateToUnixTimestamp($currentEvent->icalEvent[$token]);
             if ($wantedEventTime == null) $wantedEventTime = $currentEventTime;
-            if ($isStart){
-                if ($currentEventTime < $wantedEventTime) $wantedEventTime = $currentEventTime;
-            }
-            else if ($currentEventTime > $wantedEventTime) $wantedEventTime = $currentEventTime;
+            if ($extremeValue == "min" && $currentEventTime < $wantedEventTime) $wantedEventTime = $currentEventTime;
+            else if ($extremeValue == "max" && $currentEventTime > $wantedEventTime) $wantedEventTime = $currentEventTime;
         }
-        return idate($idateSymbol, $wantedEventTime) ;
+        return $wantedEventTime;
     }
 
-    private function setStartWeek($allEvents){
-        return $this->setScheduleTimeLimits($allEvents, true, "W");
-    }
-
-    private function setEndWeek($allEvents){
-        return $this->setScheduleTimeLimits($allEvents, false, "W");
-    }
-
-    private function setStartYear($allEvents){
-        return $this->setScheduleTimeLimits($allEvents, true, "Y");
-    }
-
-    private function setEndYear($allEvents){
-        return $this->setScheduleTimeLimits($allEvents, false, "Y");
-    }
 
     public function getNumberOfWeeks(){
         $numberOfWeeks = ($this->endYear - $this->startYear)*53;
@@ -142,8 +140,22 @@ class Schedule {
     public function getStartWeek(){
         return $this->startWeek;
     }
+    public function getStartYear(){
+        return $this->startYear;
+    }
 
     private function getErrorMessage(){
         return $this->errorMessage;
     }
+
+    private function setStartWeek(){
+        if (time() > $this->firstEventStartTimeUnix) $this->startWeek = $this->getWeek(time());
+        else $this->startWeek = $this->getWeek($this->firstEventStartTimeUnix);
+    }
+
+    private function setStartYear(){
+        if (time() > $this->firstEventStartTimeUnix) $this->startYear = $this->getYear(time());
+        else $this->startYear= $this->getYear($this->firstEventStartTimeUnix);
+    }
+
 }
