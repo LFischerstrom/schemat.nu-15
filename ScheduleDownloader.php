@@ -2,7 +2,6 @@
 require_once('MyLog.php');
 require_once("Miner.php");
 
-
 class ScheduleDownloader{
 
     const DEFAULT_FILE_PATH = "schedules/";
@@ -27,12 +26,15 @@ class ScheduleDownloader{
         return self::DEFAULT_FILE_PATH . $id . ".txt";
     }
 
-    private function getTimeeditUrl($id){
+    public function getTimeeditUrl($id){
         $startdate = "20150101";
         $enddate = "20300501";
         $timeeditObjectCode = $this->allIds[$id];
+        $timeeditObjectCode  = html_entity_decode($timeeditObjectCode, ENT_QUOTES, "utf-8"); // make it UTF-8
         $type = $this->getScheduleType($timeeditObjectCode);
-        return "https://se.timeedit.net/web/liu/db1/schema/s/s.html?tab=3&object=".$timeeditObjectCode."&type=".$type."&startdate=".$startdate."&enddate=".$enddate;
+        // urlencode to fix åäö letters
+        $url = "https://se.timeedit.net/web/liu/db1/schema/s/s.html?tab=3&object=" . urlencode($timeeditObjectCode) . "&type=".$type."&startdate=".$startdate."&enddate=".$enddate;
+        return $url;
     }
 
     // Finding the ics link in iCalDialogContent-div, option 3.
@@ -42,7 +44,7 @@ class ScheduleDownloader{
     // <option value="" selected="" data-url="ics link">Rullande 2 veckor</option>
     // <option value=""  data-url="ics link">Rullande 4 veckor</option>
     // <option value=" WANTED ICS LINK ">2015-01-01 - 2015-08-23</option>
-    private function findIcsLink($url){
+    public function findIcsLink($url){
         $timeeditPage = file_get_contents($url);
         $iCalDialogContentPos = strpos($timeeditPage ,"id=\"iCalDialogContent");
         $option1Pos = strpos($timeeditPage , "<option",$iCalDialogContentPos) +1;
@@ -59,7 +61,7 @@ class ScheduleDownloader{
         $icsContent = file_get_contents($icsUrl);
         $icsContent = $this->removeLinebreaksInIcsContent($icsContent);
         $icsContent = $this->makeLocationMarkups($icsContent);
-        file_put_contents($filePath, $icsContent);;
+        file_put_contents($filePath, $icsContent);
         return $filePath;
     }
 

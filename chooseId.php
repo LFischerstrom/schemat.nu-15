@@ -52,18 +52,14 @@
                     }
                 });
             }
-
         });
 
 
         $(document).on("keyup", function(e){
             li = $('.list li');
-
             updateSelection(e);
             updateLinks();
             updateListVisibility();
-
-
         });
 
         function setupEnterPress(){
@@ -73,11 +69,6 @@
                 }
             });
         }
-
-
-
-
-
 
         function updateSelection(e){
 

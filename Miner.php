@@ -12,8 +12,9 @@ class Miner
     const GROUPS_JS = "javascript/groups.js";
 
     private function mine($file){
+        $htmlString = html_entity_decode(file_get_contents($file));
         $html = new simple_html_dom();
-        $html->load_file($file);
+        $html->load($htmlString);
         $currentGroup = null;
         $currentCode = null;
         $array = array();
@@ -55,14 +56,13 @@ class Miner
     private function createJsArrayGroupFile(){
         $groups = $this->getGroups();
         $arrayText = "var groups = [";
-
         foreach ($groups as $group => $id){
             $arrayText .= "{ id:'". $group ."'} ,";
         }
         // removes last comma
         $arrayText = rtrim($arrayText, ",");
         $arrayText .= "];";
-        file_put_contents(self::GROUPS_JS,$arrayText);
+        file_put_contents(self::GROUPS_JS, $arrayText);
     }
 
     private function createJsArrayCoursesFile(){
