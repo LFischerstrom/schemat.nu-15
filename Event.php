@@ -131,7 +131,7 @@ class Event
 
     private function extractNextLineFromSummary(){
         $summaryFirstLine = strtok($this->summary, "\\,");
-        $this->summary = preg_replace('/^.+\,/', '', $this->summary);
+        $this->summary = preg_replace('/^.+?\,/', '', $this->summary);
         return $summaryFirstLine;
     }
 
