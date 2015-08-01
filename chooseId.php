@@ -68,7 +68,7 @@
             var inputLength = $("input:first").val().length;
             if (inputLength != 0 && li.length == 0){
                 $('.list').append(
-                    $('<li>').append("Inga sökresultat"))
+                    $('<p>').append("Inga sökresultat."))
             }
         };
 
@@ -81,8 +81,8 @@
         }
 
         function updateSelection(e){
-
-            if(e.which === 40){
+            // down arrow
+            if(e.which === 40 && li.length > 0){
                 if(liSelected){
                     liSelected.removeClass('selected');
                     var next = liSelected.next();
@@ -94,7 +94,9 @@
                 }else{
                     liSelected = li.eq(0).addClass('selected');
                 }
-            }else if(e.which === 38){
+            }
+            // up arrow
+            else if(e.which === 38 && li.length > 0){
                 if(liSelected){
                     liSelected.removeClass('selected');
                     var next = liSelected.prev();

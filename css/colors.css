@@ -26,3 +26,13 @@ header, .today, #menu{
 a:active, a:visited, a:hover, a:link{
     color: #222222;
 }
+
+.list a:active,.list a:visited,.list a:hover,.list a:link, #classSearch input, #classSearch {
+    color: #222222;
+}
+
+.top ul{
+    color: #666666;
+}
+
+
