@@ -131,11 +131,101 @@ $schedule = new Schedule($id);
                 if (weekNumber != null) $('#currentWeekNumber').text('v ' + weekNumber);
             }
 
+
+            function fixOverlappingEvents2(){
+                var allOverlappingDivs = $('.event').overlaps();
+                var divs = [];
+
+                // Creating array with overlaping divs and number of overlaps for each div
+                // divs = {[div.object , overlaps]}
+                $.each(allOverlappingDivs,function(index, div){
+                    divs[index] = [div,$(this).overlaps('.event')];
+                });
+                divs.sort(compare);
+
+
+                var allCurOverlaps = null
+                var commonOverlaps = null
+
+                // removes all not unique divs
+                $.each(divs, function(i, div) {
+                    if (div != undefined) allCurOverlaps = div[1];
+                    $.each(allCurOverlaps, function() {
+                        commonOverlaps = getCommonElements(allCurOverlaps, allOverlappingDivs);
+                        if (commonOverlaps.length > 0){
+                            remove(this,divs);
+                        }
+                    });
+                });
+
+
+                // Set left and width
+
+                // For each overlapping cluster
+                $.each(divs, function(index, cluster) {
+
+                    // For each div in the cluster // cluster: div => [div,div..]
+                    var masterDiv = cluster[0];
+                    var i = 1;
+                    var boxes = null;
+                    $.each(cluster[1], function(index, oDiv) {
+                        i++;
+                        if (overlapsAny(oDiv,cluster[1])){
+                            remove(oDiv,cluster[1]);
+                        }
+                        else if (boxes == null) boxes = i;
+                    });
+
+                    console.log(boxes);
+
+
+                });
+
+
+
+                function overlapsAny(div, allDivs){
+                    $.each(allDivs, function() {
+                        if ($(div).overlaps(this)) return true;
+                    });
+                    return false;
+                }
+
+
+
+                function remove(element, array){
+                    $.each(array, function(i){
+                        if(array[i][0] == element) {
+                            array.splice(i,1);
+                            return false;
+                        }
+                    });
+                }
+
+                function getCommonElements(array1, array2){
+                    var common = $.grep(array1, function(element) {
+                        return $.inArray(element, array2 ) !== -1;
+                    });
+                    return common;
+                }
+
+                function compare(a,b) {
+                    if (a[1].length < b[1].length)
+                        return 1;
+                    if (a[1].length > b[1].length)
+                        return -1;
+                    return 0;
+                }
+
+
+            }
+
+
             // Fixing overlapping events:
             function fixOverlappingEvents(){
 
                 var allOverlappingDivs = $('.event').overlaps();
                 $.each(allOverlappingDivs, function(index, currentDiv) {
+
                     if (!$(currentDiv).hasClass("overlapFixed")){
                         $(currentDiv).addClass("currentDiv");
                         var allDivsThatOverlapsCurrentDiv = $(".event").overlaps(".currentDiv");
@@ -150,6 +240,30 @@ $schedule = new Schedule($id);
                         $(currentDiv).removeClass("currentDiv");
                     }
                 });
+
+                var i = 0;
+                // Fixing failing overlap fixes - max 200 to prevent infinit loop
+                while ($('.event').overlaps().length > 0){
+                    i++; if (i>200) break;
+                    var divs = $('.event').overlaps();
+                    var div = divs[0];
+                    var cellWidth =  parseInt($(div).closest(".cell").css("width"), 10);
+                    var width  = getSmallestWidth($('.event').overlaps());
+                    var percentageWidth = width / cellWidth *100;
+                    var percentageLeft =  parseInt($(div).css("left") , 10)/ width *100;
+                    console.log(cellWidth);
+                    $(div).css("width", percentageWidth + "%");
+                    $(div).css("left", percentageLeft+percentageWidth + "%");
+                }
+
+            }
+
+            function getSmallestWidth(array){
+                var smallestWidth = null;
+                $.each(array, function(){
+                    if (smallestWidth == null || $(this).width() < smallestWidth) smallestWidth = $(this).width();
+                });
+                return smallestWidth;
             }
 
             // Fixing height bug
@@ -344,6 +458,13 @@ $schedule = new Schedule($id);
 
 
 <?php // STATS
-$st = new Stats();
-$st->captureStats($id);
+$whitelist = array(
+    '127.0.0.1',
+    '::1'
+);
+
+if(!in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+    $st = new Stats();
+    $st->captureStats($id);
+}
 ?>
