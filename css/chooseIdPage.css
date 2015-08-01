@@ -10,6 +10,13 @@
     max-width: 400px;
     margin: 0px auto 0;
     color:#666666;
+}
+
+.list li, #classSearch input {
+    font-size: 25px;
+}
+
+.top ul{
     font-size: 20px;
 }
 
@@ -45,9 +52,7 @@ input {
     display: none;
 }
 
-.listItem {
-    margin: 0px 0;
-    color: #000000;
+.list li {
     padding: 5px 10px;
 }
 

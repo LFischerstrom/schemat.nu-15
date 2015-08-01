@@ -60,7 +60,17 @@
             updateSelection(e);
             updateLinks();
             updateListVisibility();
+            updateNoResultStatus();
         });
+
+        // Adds text if no results is found.
+        function updateNoResultStatus() {
+            var inputLength = $("input:first").val().length;
+            if (inputLength != 0 && li.length == 0){
+                $('.list').append(
+                    $('<li>').append("Inga sökresultat"))
+            }
+        };
 
         function setupEnterPress(){
             $(document).keypress(function(e) {
@@ -161,7 +171,7 @@
 
 <header>
     <div id="row">
-         <div id="left"><h1></h1></div>
+        <div id="left"><h1></h1></div>
         <div id="middle"><h1 id="currentWeekNumber">Schemat.nu</h1></div>
         <div id="right"><a href="#"><img src="images/settings-white.png" class="button" alt=""/></a>  </div>
     </div>
