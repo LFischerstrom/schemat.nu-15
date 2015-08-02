@@ -330,37 +330,23 @@ $schedule = new Schedule($id);
                 });
             }
 
-
-
-            // TODO: Do this for every week, not just trust the first week.
-            // Error might show when first week has an unusual number of days.
             function fixResponsiveDays(){
-                var numberOfDays = $('.cell', $($(".section").first())).length;
-                var daysToShow = numberOfDays;
-                var daysToScroll = numberOfDays;
-                var width = $( "#fullpage" ).width();
+                var allWeeks = $(".section");
+                var width = $("#fullpage").width();
 
-                if (width > 800){
-                    daysToShow = numberOfDays;
-                }
-                else {
-                    daysToShow = Math.ceil(numberOfDays/2);
-                    /*
-                     if (numberOfDays == 5) daysToShow = 3;
-                     else if (numberOfDays == 6) daysToShow = 3;
-                     else if (numberOfDays == 7) daysToShow = 4;
-                     */
-                }
+                allWeeks.each(function() {
+                    var slides = $(".slide", $(this));
+                    var numberOfDays = $('.cell', $(this)).length;
+                    var daysToShow = numberOfDays;
+                    if (width < 800) daysToShow = Math.ceil(numberOfDays / 2);
+                    var daysToScroll = numberOfDays - daysToShow;
 
-                daysToScroll = numberOfDays - daysToShow;
-
-                var slides = $(".slide");
-                $(".fp-slidesContainer").width(100 * numberOfDays/daysToShow + "%");
-                slides.each(function() {
-                    $(this).css('width', 100 * daysToScroll/numberOfDays + '%');
+                    $(".fp-slidesContainer", $(this)).width(100 * numberOfDays/daysToShow + "%");
+                    slides.each(function() {
+                        $(this).css('width', 100 * daysToScroll/numberOfDays + '%');
+                    });
                 });
             }
-
 
             function removePartlyHiddenTextLinesInRest(){
                 var events = $(".event");
