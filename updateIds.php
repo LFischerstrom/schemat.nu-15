@@ -6,5 +6,6 @@ $spd = new StudentPortalenDownloader();
 $spd->downloadCoursesAndGroupsHtmlFiles();
 
 $miner = new Miner();
+
 $miner->mineGroups();
 $miner->mineCourses();

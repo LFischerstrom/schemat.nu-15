@@ -1,15 +1,16 @@
 <?php
 require_once("simple_html_dom.php");
+require_once("config2.php");
 
 class StudentPortalenDownloader {
 
     public function downloadCoursesAndGroupsHtmlFiles(){
 
+        $html = new simple_html_dom();
 
         $studentPortalenUrl = "https://www3.student.liu.se/portal/login";
 
-        $html = new simple_html_dom();
-        $html->load_file($studentPortalenUrl);
+        $html->load_fileX($studentPortalenUrl);
         $loginPara = $html->find("input[name=login_para]")[0]->value;
         $time = $html->find("input[name=time]")[0]->value;
 
@@ -19,8 +20,8 @@ class StudentPortalenDownloader {
         //create array of data to be posted
         $post_data['login_para'] = $loginPara;
         $post_data['time'] = $time;
-        $post_data['user'] = 'henha972';
-        $post_data['pass2'] = 'henning1hall';
+        $post_data['user'] = STUDENTPORTALEN_USERNAME;
+        $post_data['pass2'] = STUDENTPORTALEN_PASSWORD;
 
         //traverse array and prepare data for posting (key1=value1)
         foreach ( $post_data as $key => $value) {

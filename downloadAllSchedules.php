@@ -42,9 +42,10 @@ if ($amount > 0){
     print $script;
 }
 
-
 function getNumberOfIds(){
-    $miner = new Miner();
-    $size = sizeof($miner->getGroupsAndCourses());
+    require_once("DatabaseConnection.php");
+    $db = new DatabaseConnection();
+    $size = $db->getNumberOfCoursesAndGroups();
     return $size;
+
 }

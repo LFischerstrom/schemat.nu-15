@@ -1,13 +1,13 @@
 <?php
-require_once "simple_html_dom.php";
+require_once("simple_html_dom.php");
+
+
 
 class Miner
 {
 
     const GROUPS_FILE = "groups.html";
     const COURSES_FILE = "courses.html";
-    const GROUPS_JSON = "groups.json";
-    const COURSES_JSON = "courses.json";
     const COURSES_JS = "javascript/courses.js";
     const GROUPS_JS = "javascript/groups.js";
 
@@ -29,32 +29,36 @@ class Miner
         return $array;
     }
 
-    public function getGroups(){
-        return json_decode(file_get_contents(self::GROUPS_JSON), true);
-    }
-
-    public function getCourses(){
-        return json_decode(file_get_contents(self::COURSES_JSON), true);
-    }
-
-    public function getGroupsAndCourses(){
-        return array_merge($this->getGroups(), $this->getCourses());
-    }
-
     public function mineCourses(){
         $courses = $this->mine(self::COURSES_FILE);
-        file_put_contents(self::COURSES_JSON,json_encode($courses));
+
+        // Adds all new courses to the database but doesn't update the old if any changes.
+        require_once("DatabaseConnection.php");
+        $db = new DatabaseConnection();
+        foreach($courses as $course => $object){
+            $db->insertCourse($course, $object);
+        }
+
         $this->createJsArrayCoursesFile();
     }
 
     public function mineGroups(){
         $groups = $this->mine(self::GROUPS_FILE);
-        file_put_contents(self::GROUPS_JSON,json_encode($groups));
+
+        // Adds all new courses to the database but doesn't update the old if any changes.
+        require_once("DatabaseConnection.php");
+        $db = new DatabaseConnection();
+        foreach($groups as $group => $object){
+            $db->insertGroup($group, $object);
+        }
+
         $this->createJsArrayGroupFile();
     }
 
     private function createJsArrayGroupFile(){
         $groups = $this->getGroups();
+
+
         $arrayText = "var groups = [";
         foreach ($groups as $group => $id){
             $arrayText .= "{ id:'". $group ."'} ,";

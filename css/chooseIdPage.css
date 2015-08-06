@@ -1,32 +1,80 @@
 #classSearch{
     padding-top: 80px;
-    width: 80%;
 }
+
+#classSearch, .top ul, .top form, .top textarea{
+    width: 85%;
+    max-width: 400px;
+}
+
 #classSearch p{
     text-align: center;
 }
 
-.top ul, #classSearch{
-    max-width: 400px;
+.top ul, .top form , #classSearch, .top textarea, .top button{
     margin: 0px auto 0;
 }
 
-.list li, #classSearch input {
-    font-size: 25px;
-}
 
-.top ul{
-    font-size: 20px;
-}
-
-.top ul{
-    width: 90%;
-}
-
-
-input {
+ #classSearch li, .top input[type=submit], .customPickList input {
     font-size: 22px;
-    height: 45px;
+}
+
+#classSearch input{
+    font-size: 23px;
+}
+
+.top .liuLogin{
+    font-size: 18px;
+    display: block;
+    margin-top: 20px;
+    color:white;
+    background-color: #2b81af;
+    border: 0;
+    cursor: pointer;
+    height: 40px;
+    width: 235px;
+    box-shadow: 0px 0px 5px #888888;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 2px;
+}
+
+.top .liuLogin:hover{
+    background-color: goldenrod;
+}
+
+.liuLogin div:nth-child(2n){
+    border-left: 1px solid lightgray;
+    padding-left: 10px;
+}
+.liuLogin div{
+    float: left;
+    height: 40px;
+    vertical-align: middle;
+    padding-top: 9px;
+}
+
+.liuLogin img{
+    margin-top: -9px;
+    margin-right: 5px;
+    width: 35px;
+    height: 35px;
+}
+
+.top button .small{
+    font-size: 14px;
+}
+
+.top ul{
+    font-size: 18px;
+    padding: 0;
+    list-style: none;
+}
+
+
+#classSearch .search{
+    height: 55px;
     width: 100%;
     box-shadow: 0px 0px 15px #888888;
     border: 0;
@@ -51,7 +99,11 @@ input {
     display: none;
 }
 
-.list li {
+.list li{
+    padding: 5px 10px;
+}
+
+.courseItem {
     padding: 5px 10px;
 }
 
@@ -71,13 +123,65 @@ input {
 }
 
 .top {
-    margin-top: 40px;
-    margin-left: -20px;
+    margin-top: 30px;
 }
 
-.top ul li{
+.checklist li{
     background:  url("../images/check1.png") no-repeat left center;
-    padding: 25px 20px 20px 60px;
-    list-style: none;
+    padding: 25px 5px 20px 60px;
     margin-top: -20px;
+}
+
+.top form button {
+    cursor: pointer;
+    width: 70%;
+}
+
+
+.top textarea{
+    display: block;
+    padding: 10px;
+    resize: none;
+
+}
+
+.top form{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.customPickList{
+    background-color: white;
+    box-shadow: 0px 0px 15px #888888;
+}
+
+.customPickList input[type=text]{
+    border: 0;
+    height: 35px;
+    width: calc(100% - 35px);
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+
+}
+
+.customPickList div {
+    border-bottom: 1px solid lightgray;
+}
+
+.customPickList img {
+    width: 27px;
+    height: 27px;
+    vertical-align: middle;
+    margin-top: -5px;
+    cursor: pointer;
+}
+
+input[type=submit] {
+    margin-top: 30px;
+    box-shadow: 0px 0px 5px #888888;
+}
+
+.courseItem {
+    padding: 0 10px;
 }

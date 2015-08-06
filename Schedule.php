@@ -24,9 +24,32 @@ class Schedule {
 
         // for testing
         //$this->icsFilePath = "ics-parser/MyCal.ics";
+        $path = self::ICS_FILE_DIRECTORY . $id . ".txt";
 
-        $ical = new ICal(self::ICS_FILE_DIRECTORY . $id . ".txt");
-        $icalEvents = $ical->events();
+        // If path doesnt exist  - check if it is a user and get its courses
+        if (!file_exists($path)){
+            require_once("DatabaseConnection.php");
+            $db = new DatabaseConnection();
+            if($db->isUser($id)){
+                $courses = $db->getCoursesForUser($id);
+                $icalEvents = array();
+                foreach ($courses as $course){
+                    $ical = new ICal(self::ICS_FILE_DIRECTORY . $course["code"] . ".txt");
+                    $icalEvents = array_merge($icalEvents, $ical->events());
+                }
+            }
+            // ERROR: File not found and no user
+            else {
+                $this->error = true;
+                $this->errorMessage = " ERROR: File not found and no user: $id";
+            }
+        }
+        // Path exist (id is a group or cours -> get events from file
+        else{
+            $ical = new ICal(self::ICS_FILE_DIRECTORY . $id . ".txt");
+            $icalEvents = $ical->events();
+        }
+
         if (!isset($icalEvents) || $icalEvents == null || $icalEvents == "") {
             $this->error = true;
             $this->errorMessage = "Inga bokningar hittade för $id";

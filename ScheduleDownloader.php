@@ -1,6 +1,8 @@
 <?php
 require_once('MyLog.php');
 require_once("Miner.php");
+require_once("DatabaseConnection.php");
+
 
 class ScheduleDownloader{
 
@@ -9,14 +11,12 @@ class ScheduleDownloader{
     const LOCATION_MARKUP_FILE = "locations.txt";
     const ID_FILE = "idList.txt";
 
-    // allIds is an array: Id => timeeditObjectCode
-    private $allIds;
     private $log;
+    private $db;
 
     public function __construct(){
         $this->log = new MyLog();
-        $miner = new Miner();
-        $this->allIds = $miner->getGroupsAndCourses();
+        $this->db = new DatabaseConnection();
     }
 
     public function getFilePath($id){
@@ -29,12 +29,33 @@ class ScheduleDownloader{
     public function getTimeeditUrl($id){
         $startdate = "20150101";
         $enddate = "20300501";
-        $timeeditObjectCode = $this->allIds[$id];
+        $timeeditObjectCode = $this->db->getObject($id);
+
         $timeeditObjectCode  = html_entity_decode($timeeditObjectCode, ENT_QUOTES, "utf-8"); // make it UTF-8
         $type = $this->getScheduleType($timeeditObjectCode);
         // urlencode to fix åäö letters
         $url = "https://se.timeedit.net/web/liu/db1/schema/s/s.html?tab=3&object=" . urlencode($timeeditObjectCode) . "&type=".$type."&startdate=".$startdate."&enddate=".$enddate;
         return $url;
+    }
+
+
+    public function downloadSchedules($offset, $amount){
+
+        $ids = $this->db->getIds($offset,$amount);
+
+        foreach ($ids as $id) {
+            $id = $id["code"];
+            $this->downloadSchedule($id);
+
+            // Error handling
+            $fileSize = round(filesize($this->getFilePath($id))/1000,1);
+            if ($fileSize == 0) $this->log->write("ERROR: Downloading " . $id . " | ". $this->getTimeeditUrl($id) . "\n");
+            else $this->log->write("Downloaded: " . $id . " | " . $fileSize  . " Kb \n");
+
+            // print log
+            print nl2br($this->log->readBackwards(50));
+
+        }
     }
 
     // Finding the ics link in iCalDialogContent-div, option 3.
@@ -83,26 +104,7 @@ class ScheduleDownloader{
         return $icsContent;
     }
 
-    public function downloadSchedules($offset, $amount){
-        $counter = 0;
-        $downloadedSchedules = 0;
 
-        foreach ($this->allIds as $id => $objectType) {
-            if($counter++ < $offset) continue;
-            if($downloadedSchedules >= $amount) return;
-            $this->downloadSchedule($id);
-
-            // Error handling
-            $fileSize = round(filesize($this->getFilePath($id))/1000,1);
-            if ($fileSize == 0) $this->log->write("ERROR: Downloading " . $id . " | ". $this->getTimeeditUrl($id) . "\n");
-            else $this->log->write("Downloaded: " . $id . " | " . $fileSize  . " Kb \n");
-
-            // print log
-            print nl2br($this->log->readBackwards(50));
-
-            $downloadedSchedules++;
-        }
-    }
 
     public function downloadSchedule($id){
         $timeeditUrl = $this->getTimeeditUrl($id);
