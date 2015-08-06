@@ -36,7 +36,7 @@ class Miner
         require_once("DatabaseConnection.php");
         $db = new DatabaseConnection();
         foreach($courses as $course => $object){
-            $db->insertCourse($course, $object);
+            $db->insertSchedule($course, $object, 2);
         }
 
         $this->createJsArrayCoursesFile();
@@ -49,19 +49,20 @@ class Miner
         require_once("DatabaseConnection.php");
         $db = new DatabaseConnection();
         foreach($groups as $group => $object){
-            $db->insertGroup($group, $object);
+            $db->insertSchedule($group, $object, 1);
         }
 
         $this->createJsArrayGroupFile();
     }
 
     private function createJsArrayGroupFile(){
-        $groups = $this->getGroups();
-
+        require_once("DatabaseConnection.php");
+        $db = new DatabaseConnection();
+        $groups = $db->getGroups();
 
         $arrayText = "var groups = [";
-        foreach ($groups as $group => $id){
-            $arrayText .= "{ id:'". $group ."'} ,";
+        foreach ($groups as $group){
+            $arrayText .= "{ id:'". $group["code"] ."'} ,";
         }
         // removes last comma
         $arrayText = rtrim($arrayText, ",");
@@ -70,11 +71,16 @@ class Miner
     }
 
     private function createJsArrayCoursesFile(){
-        $courses = $this->getCourses();
+        require_once("DatabaseConnection.php");
+        $db = new DatabaseConnection();
+        $courses = $db->getCourses();
+
+
+
         $arrayText = "var courses = [";
 
-        foreach ($courses as $course => $id){
-            $arrayText .= "{ id:'". $course."'} ,";
+        foreach ($courses as $course){
+            $arrayText .= "{ id:'". $course["code"]."'} ,";
         }
         // removes last comma
         $arrayText = rtrim($arrayText, ",");

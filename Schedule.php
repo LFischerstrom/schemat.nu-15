@@ -24,18 +24,19 @@ class Schedule {
 
         // for testing
         //$this->icsFilePath = "ics-parser/MyCal.ics";
-        $path = self::ICS_FILE_DIRECTORY . $id . ".txt";
+
+        $path = self::ICS_FILE_DIRECTORY . str_replace("*","@",$id) . ".txt";
 
         // If path doesnt exist  - check if it is a user and get its courses
         if (!file_exists($path)){
             require_once("DatabaseConnection.php");
             $db = new DatabaseConnection();
             if($db->isUser($id)){
-                $courses = $db->getCoursesForUser($id);
+                $schedules = $db->getSchedulesForUser($id);
                 $icalEvents = array();
-                foreach ($courses as $course){
-                    $ical = new ICal(self::ICS_FILE_DIRECTORY . $course["code"] . ".txt");
-                    $icalEvents = array_merge($icalEvents, $ical->events());
+                foreach ($schedules as $schedule){
+                    $ical = new ICal(self::ICS_FILE_DIRECTORY . str_replace("*","@",$schedule["code"]) . ".txt");
+                    if (sizeof($ical->events()) > 0) $icalEvents = array_merge($icalEvents, $ical->events());
                 }
             }
             // ERROR: File not found and no user
@@ -46,7 +47,7 @@ class Schedule {
         }
         // Path exist (id is a group or cours -> get events from file
         else{
-            $ical = new ICal(self::ICS_FILE_DIRECTORY . $id . ".txt");
+            $ical = new ICal(self::ICS_FILE_DIRECTORY . str_replace("*","@",$id) . ".txt");
             $icalEvents = $ical->events();
         }
 

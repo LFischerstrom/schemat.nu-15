@@ -37,7 +37,7 @@ require_once ("DatabaseConnection.php");
 $db = new DatabaseConnection();
 $user = phpCAS::getUser();
 // Show schedule if already have one
-if ($db->isUser($user) && sizeof($db->getCoursesForUser($user)) > 0 && !isset($_GET["edit"])){
+if ($db->isUser($user) && sizeof($db->getSchedulesForUser($user)) > 0 && !isset($_GET["edit"])){
     setcookie("SchematId",$user, time() + (365 * 24 * 60 * 60) );
     header("Location: /");
 }
@@ -145,10 +145,10 @@ if ($db->isUser($user) && sizeof($db->getCoursesForUser($user)) > 0 && !isset($_
 
             <?php
 
-            $courses = $db->getCoursesForUser(phpCAS::getUser());
+            $schedules = $db->getSchedulesForUser(phpCAS::getUser());
 
-            foreach ($courses as $course){
-                print '<div class="courseItem"><input type="text" name="courses[]" value="'.$course["code"].'" readonly /><img src="images/cross.png" /></div>';
+            foreach ($schedules as $schedule){
+                print '<div class="courseItem"><input type="text" name="courses[]" value="'.$schedule["code"].'" readonly /><img src="images/cross.png" /></div>';
             }
             ?>
 

@@ -7,9 +7,10 @@ phpCAS::setNoCasServerValidation();
 // force CAS authentication
 phpCAS::forceAuthentication();
 
+print_r($_POST['courses']);
 
 if (!isset($_POST['courses'])) header("Location: /");
-$courses = $_POST['courses'];
+$schedules = $_POST['courses'];
 $user = phpCAS::getUser();
 
 
@@ -22,11 +23,11 @@ $db = new DatabaseConnection();
 $db->addUser($user);
 
 // remove all entries for user
-$db->removeAllCoursesForUser($user);
+$db->removeAllSchedulesForUser($user);
 
 // add the new entries for the user
-foreach ($courses as $course) {
-   $db->addCourseForUser($course, $user);
+foreach ($schedules as $schedule) {
+   $db->addScheduleForUser($schedule, $user);
 }
 
 // Sets cookie

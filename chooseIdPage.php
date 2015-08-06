@@ -77,8 +77,8 @@
     <ul class="checklist">
         <li>Visar schemat nu, inget tjafs.</li>
         <li>Kommer ihåg ditt schemaval.</li>
-        <li>Stödjer både klasser och kurser.</li>
         <li>Stabil mobilanpassning.</li>
+        <li>Stödjer klasser, kurser och personliga scheman.</li>
     </ul>
 </div>
 

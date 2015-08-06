@@ -3,6 +3,14 @@ require_once("connect.php");
 
 class DatabaseConnection {
 
+    public function insertSchedule($code, $object, $type){
+        $code = htmlspecialchars($code);
+        $object = htmlspecialchars($object);
+        $sql = "insert into schedules (id, code, object, type) values (id, '$code','$object', '$type')";
+        $sql = mysql_query($sql);
+    }
+
+
     public function insertCourse($code, $object){
         $code = htmlspecialchars($code);
         $object = htmlspecialchars($object);
@@ -19,6 +27,14 @@ class DatabaseConnection {
 
     public function getObject($code){
         $code = htmlspecialchars($code);
+        $sql = "SELECT code, object FROM schedule WHERE code = '$code'";
+        $result = mysql_query($sql) or die(mysql_error());
+        $row = mysql_fetch_assoc( $result);
+        return $row["object"];
+    }
+
+    public function getObject2($code){
+        $code = htmlspecialchars($code);
         $sql = "SELECT  code, object FROM
         (
             SELECT code, object FROM courses
@@ -31,12 +47,7 @@ class DatabaseConnection {
     }
 
     public function getAllGroupsAndCourses(){
-        $sql = "SELECT  id, code, object FROM
-        (
-            SELECT id, code, object FROM courses
-            UNION ALL
-            SELECT id, code, object FROM groups
-        ) s GROUP BY code";
+        $sql = "SELECT  id, code, object FROM schedules";
         $result = mysql_query($sql) or die(mysql_error());
         while( $row = mysql_fetch_assoc( $result)){
             $new_array[] = $row; // Inside while loop
@@ -44,33 +55,52 @@ class DatabaseConnection {
         return $new_array;
     }
 
+    // TODO: fixe type
+    public function getGroups(){
+        $sql = "SELECT  id, code, object FROM schedules WHERE TYPE = 1";
+        $result = mysql_query($sql) or die(mysql_error());
+        $array = array();
+        while( $row = mysql_fetch_assoc( $result)){
+            array_push($array,$row);
+        }
+        return $array;
+    }
+
+    // TODO: fixe type
+    public function getCourses(){
+        $sql = "SELECT  id, code, object FROM schedules WHERE TYPE = 2";
+        $result = mysql_query($sql) or die(mysql_error());
+        $array = array();
+        while( $row = mysql_fetch_assoc( $result)){
+            array_push($array,$row);
+        }
+        return $array;
+    }
+
+
+    // TODO: fixe type
     public function getNumberOfGroups(){
-        $result = mysql_query("SELECT COUNT(*) FROM groups") or die(mysql_error());
+        $result = mysql_query("SELECT COUNT(*) FROM schedules WHERE type = 1")  or die(mysql_error());
         $row = mysql_fetch_row($result);
         return $row[0];
     }
 
+    // TODO: fixe type
     public function getNumberOfCourses(){
-        $result = mysql_query("SELECT COUNT(*) FROM courses") or die(mysql_error());
+        $result = mysql_query("SELECT COUNT(*) FROM schedules WHERE type = 0") or die(mysql_error());
         $row = mysql_fetch_row($result);
         return $row[0];
     }
 
     public function getNumberOfCoursesAndGroups(){
-        $sql1 = " (SELECT COUNT(*) FROM courses) ";
-        $sql2 = "SELECT COUNT(*)," . $sql1 . " FROM groups";
-        $result = mysql_query($sql2) or die(mysql_error());
+        $sql = " (SELECT COUNT(*) FROM schedules) ";
+        $result = mysql_query($sql) or die(mysql_error());
         $row = mysql_fetch_row($result);
-        return $row[1]+$row[0];
+        return $row[0];
     }
 
     public function getIds($offset, $amount){
-        $sql = "SELECT  code FROM
-        (
-            SELECT code, object FROM courses
-            UNION ALL
-            SELECT code, object FROM groups
-        ) s GROUP BY code LIMIT $offset, $amount";
+        $sql = "SELECT code FROM schedules LIMIT $offset, $amount";
         $result = mysql_query($sql) or die(mysql_error());
         $idArray = array();
         while( $row = mysql_fetch_assoc( $result)){
@@ -79,23 +109,19 @@ class DatabaseConnection {
         return $idArray;
     }
 
-    public function removeAllCoursesForUser($user){
+    public function removeAllSchedulesForUser($user){
         $user = htmlspecialchars($user);
-        $sql = "DELETE FROM users_courses
+        $sql = "DELETE FROM users_schedules
         WHERE user_id= (select id from users where liu_id = '$user');";
         mysql_query($sql) or die(mysql_error());
     }
 
-    public function addCourseForUser($course, $user){
+    public function addScheduleForUser($code, $user){
         $user = htmlspecialchars($user);
-        $course = htmlspecialchars($course);
-        $sql = "INSERT INTO users_courses (user_id, course_id )VALUES (
+        $code = htmlspecialchars($code);
+        $sql = "INSERT INTO users_schedules (user_id, schedule_id )VALUES (
                   (SELECT id FROM users WHERE liu_id = '$user'),
-                  (SELECT id FROM  (
-            SELECT code, object FROM courses
-            UNION ALL
-            SELECT code, object FROM groups
-        ) s GROUP BY code) WHERE code = '$course')
+                  (SELECT id FROM schedules WHERE code = '$code')
                   )";
         mysql_query($sql) or die(mysql_error());
     }
@@ -115,9 +141,9 @@ class DatabaseConnection {
         return $array[0];
     }
 
-    public function getCoursesForUser($id){
+    public function getSchedulesForUser($id){
         $id = htmlspecialchars($id);
-        $sql = "SELECT code FROM courses WHERE id IN (SELECT course_id FROM users_courses WHERE user_id = (SELECT id FROM users WHERE liu_id = '$id'))";
+        $sql = "SELECT code FROM schedules WHERE id IN (SELECT schedule_id FROM users_schedules WHERE user_id = (SELECT id FROM users WHERE liu_id = '$id'))";
         $result = mysql_query($sql) or die(mysql_error());
         $courseArray = array();
         while( $row = mysql_fetch_assoc( $result)){
