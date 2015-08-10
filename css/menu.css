@@ -9,6 +9,7 @@
 
 #menu .option{
     width: 100%;
+    max-width: 130px;
 }
 
 #menu li.active{
@@ -42,6 +43,7 @@
     padding: 7px;
     margin:0;
     text-align: right;
+    max-width: 300px;
 }
 
 #popupMenu{

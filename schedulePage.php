@@ -63,10 +63,11 @@ $schedule = new Schedule($id);
         require_once("DatabaseConnection.php");
         $db = new DatabaseConnection();
         if($db->isUser($id)){
-            print ' <li class="option"><a href="customSchedule.php?edit=true">Ändra schema</a></li><br />';
+            print ' <li class="option"><a href="customSchedule.php?edit=true">Ändra schema</a></li>
+ ';
         }
         ?>
-        <li class="option"><a href="removeCookie.php">Byt Schema</a></li><br />
+        <li class="option"><a href="removeCookie.php">Byt Schema</a></li>
         <li class="option"><a href="report.php">Rapportera fel</a></li>
     </ul>
 </div>

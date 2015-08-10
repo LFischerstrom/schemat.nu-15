@@ -102,6 +102,7 @@ if ($db->isUser($user) && sizeof($db->getSchedulesForUser($user)) > 0 && !isset(
                 $('.search').val('');
                 $(".list").hide();
                 $(".top").show();
+                $("#formMessage").hide();
                 setupRemoveCourses();
             });
 
@@ -165,7 +166,7 @@ if ($db->isUser($user) && sizeof($db->getSchedulesForUser($user)) > 0 && !isset(
         if (choosenCourses < 1){
             event.preventDefault();
             $("#formMessage").text("Minst en klass eller kurs måste väljas.");
-
+            $("#formMessage").show();
         }
     });
     $("body").show();
