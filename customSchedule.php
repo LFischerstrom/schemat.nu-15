@@ -36,9 +36,10 @@ if (isset($_REQUEST['logout'])) {
 require_once ("DatabaseConnection.php");
 $db = new DatabaseConnection();
 $user = phpCAS::getUser();
+setcookie("SchematId",$user, time() + (365 * 24 * 60 * 60));
+
 // Show schedule if already have one
 if ($db->isUser($user) && sizeof($db->getSchedulesForUser($user)) > 0 && !isset($_GET["edit"])){
-    setcookie("SchematId",$user, time() + (365 * 24 * 60 * 60) );
     header("Location: /");
 }
 // else show this custom schedule page
@@ -140,7 +141,7 @@ if ($db->isUser($user) && sizeof($db->getSchedulesForUser($user)) > 0 && !isset(
 <?php include("classSearch.html") ?>
 
 <div class="top">
-    <form action="createCustomSchedule.php" method="post">
+    <form id="customScheduleForm" action="createCustomSchedule.php" method="post">
         <div class="customPickList">
 
             <?php
@@ -154,10 +155,19 @@ if ($db->isUser($user) && sizeof($db->getSchedulesForUser($user)) > 0 && !isset(
 
         </div>
         <input type="submit" value="Skapa schema">
+        <div id="formMessage"></div>
     </form>
 </div>
 
 <script>
+    $("#customScheduleForm").submit(function(event){
+        var choosenCourses = $(".courseItem").length;
+        if (choosenCourses < 1){
+            event.preventDefault();
+            $("#formMessage").text("Minst en klass eller kurs måste väljas.");
+
+        }
+    });
     $("body").show();
     $(".list").show();
 </script>

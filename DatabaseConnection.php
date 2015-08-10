@@ -27,7 +27,7 @@ class DatabaseConnection {
 
     public function getObject($code){
         $code = htmlspecialchars($code);
-        $sql = "SELECT code, object FROM schedule WHERE code = '$code'";
+        $sql = "SELECT code, object FROM schedules WHERE code = '$code'";
         $result = mysql_query($sql) or die(mysql_error());
         $row = mysql_fetch_assoc( $result);
         return $row["object"];

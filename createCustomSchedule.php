@@ -1,19 +1,21 @@
 <?php
 require_once 'phpCAS/CAS.php';
 require_once 'phpCAS/docs/examples/config.example.php';
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
-phpCAS::setNoCasServerValidation();
+
+// phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+// phpCAS::setNoCasServerValidation();
 
 // force CAS authentication
-phpCAS::forceAuthentication();
+// phpCAS::forceAuthentication();
+
+// $user = phpCAS::getUser();
+
+if (!isset($_COOKIE["SchematId"])) header("Location: customSchedule.php");
+else $user = $_COOKIE["SchematId"];
 
 print_r($_POST['courses']);
-
 if (!isset($_POST['courses'])) header("Location: /");
 $schedules = $_POST['courses'];
-$user = phpCAS::getUser();
-
-
 
 // create or update custom schedule
 require_once("DatabaseConnection.php");
