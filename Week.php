@@ -60,6 +60,9 @@ class Week {
             else $todayClass = "";
             $daysContent .= '<div class="weekdayHeader '.$todayClass.'">' . $this->getDayHeader($i).'</div>';
             $daysContent .= '<div class="weekdayContent">';
+
+            if ($day->isToday()) $daysContent .= '<div id="timeLine" style="top:'.$day->getCurrentTimeTopPercentage().'%"></div>';
+
             $daysContent .= $day->getDayHtml();
             $daysContent .= '</div></div>';
             $date = $date->modify('+1 days');

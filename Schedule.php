@@ -173,13 +173,20 @@ class Schedule {
     }
 
     private function setStartWeek(){
-        if (time() > $this->firstEventStartTimeUnix) $this->startWeek = $this->getWeek(time());
+        if (time() > $this->firstEventStartTimeUnix){
+            if ($this->isTodaySunday()) $this->startWeek = ($this->getWeek(time()) % 54) + 1;
+            else $this->startWeek = $this->getWeek(time());
+        }
         else $this->startWeek = $this->getWeek($this->firstEventStartTimeUnix);
     }
 
     private function setStartYear(){
         if (time() > $this->firstEventStartTimeUnix) $this->startYear = $this->getYear(time());
         else $this->startYear= $this->getYear($this->firstEventStartTimeUnix);
+    }
+
+    private function isTodaySunday(){
+        return date('D', time() === 'Sun');
     }
 
 }

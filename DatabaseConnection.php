@@ -1,7 +1,16 @@
 <?php
-require_once("connect.php");
+include("connect.php");
 
 class DatabaseConnection {
+
+    public  function insertCourseLink($courseCode, $url){
+        $courseCode = htmlspecialchars($courseCode);
+        $url = htmlspecialchars($url);
+        $sql = "INSERT INTO courses_links2 (id, course, url) VALUES (id, (
+                SELECT id FROM schedules WHERE code = '$courseCode'
+                ),'$url')";
+        $sql = mysql_query($sql);
+    }
 
     public function insertSchedule($code, $object, $type){
         $code = htmlspecialchars($code);
@@ -150,6 +159,16 @@ class DatabaseConnection {
             array_push($courseArray,$row);
         }
         return $courseArray;
+    }
+
+    public function courseHasLink($courseCode){
+        $courseCode = htmlspecialchars($courseCode);
+        $sql = "SELECT EXISTS(SELECT id FROM courses_links2 WHERE course = (
+        SELECT id FROM schedules WHERE code = '$courseCode'))";
+        $result = mysql_query($sql);
+        $array = mysql_fetch_array($result);
+        if ($array[0] == 1) return true;
+        else return false;
     }
 
 

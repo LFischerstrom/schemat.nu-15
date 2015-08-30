@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
     <title>Schemat.nu</title>
     <meta charset="UTF-8">
@@ -8,7 +8,6 @@
 
     <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 
 </head>
 <body>
@@ -24,6 +23,7 @@
     <p>Har du frågor, synpunkter eller upptäkt ett fel på schemat.nu?</p>
     <p>Släng iväg ett mail till <strong>henha972@<span class="displaynone">null</span>student.liu.se</strong></p>
     <p>Beskriv problemet så detaljerat du kan.</p>
+    <p>Schemat.nu är ingen officiell produkt från Linköpings universitet.</p>
     <br />
     <p><a href="../">Tillbaka till schemat...</a></p>
 </div>

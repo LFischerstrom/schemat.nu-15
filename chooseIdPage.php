@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
     <title>Schemat - LiU - Linköpings universitet</title>
     <meta name="description" content="Schemat.nu visar LiU's schema - schemat vid Linköpings universitet. Bättre tillgänglighet och förenklad läsbarhet.">
@@ -78,7 +78,7 @@
         <li>Visar schemat nu, inget tjafs.</li>
         <li>Kommer ihåg ditt schemaval.</li>
         <li>Stödjer klasser, kurser och personliga scheman.</li>
-        <li>Stabil mobilanpassning.</li>
+        <li>Stabilt på mobilt.</li>
     </ul>
 </div>
 

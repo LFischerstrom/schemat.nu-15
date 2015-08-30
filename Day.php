@@ -62,4 +62,17 @@ class Day {
         }
     }
 
+    public function getCurrentTimeTopPercentage(){
+        $dateTime = new DateTime();
+        $hour = $dateTime->format('H');
+        $minutes = $dateTime->format('i');
+        $minutesInHourFormat = $minutes / 60;
+        $decimalHour = $hour + $minutesInHourFormat;
+
+        $decimalHour = 0;
+        $topPercentage = ($decimalHour  - $this->startTime) / ($this->endTime - $this->startTime) * 100;
+
+        return $topPercentage;
+    }
+
 }
